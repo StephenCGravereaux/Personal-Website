@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stephen Gravereaux | CAFE LAB Project" />
+  <title>Stephen Gravereaux | CAFE LAB Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260304d" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="bg-orb orb-a" aria-hidden="true"></div>
+  <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html#top" class="brand">Stephen Gravereaux</a>
+      <ul>
+        <li><a href="index.html#top">Home</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="index.html#publications">Publication</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="page-hero reveal">
+      <p class="eyebrow">Undergraduate Research</p>
+      <h1>Cognitive Security Accountability, Fairness and Explainability (CAFE LAB)</h1>
+      <p class="project-period">2025-2026</p>
+      <p class="intro">
+        Comparative malware explanation research focused on balancing explanation quality
+        and compute efficiency for practical deployment.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Project Overview</span>
+        <h2>EMBER + SHAP + LLM Comparison Pipeline</h2>
+      </div>
+
+      <article class="project-card">
+        <p class="project-meta">Role: Undergraduate Researcher</p>
+        <p>
+          I designed and validated a malware explanation pipeline that compares parameter-efficient tuning (LoRA)
+          against full fine-tuning for LLM-based analysis. The work covers data preparation, model comparison,
+          explanation generation, and evaluation of performance versus resource cost.
+        </p>
+
+        <div class="project-links">
+          <a class="btn btn-primary" href="https://github.com/StephenCGravereaux/EMBER-LLM-Comparison-Pipeline" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a class="btn btn-secondary" href="https://arxiv.org/html/2511.19654v1" target="_blank" rel="noopener noreferrer">Paper (arXiv)</a>
+          <a class="btn btn-secondary" href="crypto-lab-project.html">View CRYPTO LAB Project</a>
+          <a class="btn btn-secondary" href="twitch-chatbot-project.html">View Twitch Chatbot Project</a>
+          <a class="btn btn-secondary" href="projects.html">Back to Projects</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Contributions</span>
+        <h2>Key Work Completed</h2>
+      </div>
+      <article class="project-card">
+        <ul class="project-list">
+          <li>Used the EMBER 2018 dataset with a LightGBM classifier and SHAP feature analysis.</li>
+          <li>Trained and compared multiple LoRA configurations against a full fine-tuned LLM baseline.</li>
+          <li>Generated human-readable malware explanations from model outputs and feature-importance signals.</li>
+          <li>Evaluated quality and efficiency trade-offs to identify practical deployment configurations.</li>
+          <li>Packaged scripts and setup flow for reproducible experimentation in the public repository.</li>
+        </ul>
+        <h3>Technology Stack</h3>
+        <div class="chips">
+          <span>Python</span>
+          <span>LightGBM</span>
+          <span>SHAP</span>
+          <span>LoRA</span>
+          <span>LLM Fine-Tuning</span>
+          <span>Docker</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="section contact" id="contact">
+    <h2>Contact</h2>
+    <p>Ballston Lake, New York</p>
+    <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
+    <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
+  </footer>
+
+  <script src="main.js?v=20260304d"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stephen Gravereaux | Automated AI Twitch Chatbot Project" />
+  <title>Stephen Gravereaux | Twitch Chatbot Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260304d" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="bg-orb orb-a" aria-hidden="true"></div>
+  <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html#top" class="brand">Stephen Gravereaux</a>
+      <ul>
+        <li><a href="index.html#top">Home</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="index.html#publications">Publication</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="page-hero reveal">
+      <p class="eyebrow">Personal Build</p>
+      <h1>Automated AI Twitch Chatbot</h1>
+      <p class="project-period">2023-Current</p>
+      <p class="intro">
+        A hobby project built to test whether a full end-to-end AI streaming assistant could be made practical,
+        controllable, and voice-driven.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Project Overview</span>
+        <h2>Live Streaming AI Assistant Pipeline</h2>
+      </div>
+
+      <article class="project-card">
+        <p class="project-meta">Role: Designer and Builder</p>
+        <p>
+          I developed an automated AI chatbot system for Twitch that integrates API-driven chat interaction,
+          custom voice output, and model orchestration across both local and hosted LLMs. The goal was to build
+          a working system from scratch as a hobby challenge and prove that a reliable, feature-rich setup was possible.
+        </p>
+
+        <div class="project-links">
+          <a class="btn btn-secondary" href="cafe-lab-project.html">View CAFE LAB Project</a>
+          <a class="btn btn-secondary" href="crypto-lab-project.html">View CRYPTO LAB Project</a>
+          <a class="btn btn-secondary" href="projects.html">Back to Projects</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Implementation</span>
+        <h2>Key Components</h2>
+      </div>
+      <article class="project-card">
+        <ul class="project-list">
+          <li>Integrated Twitch Developer API keys for real-time chat ingestion and response flow control.</li>
+          <li>Implemented voice modulation/output using the ElevenLabs API with a custom-trained voice profile.</li>
+          <li>Used fine-tuned OpenAI models alongside a local fine-tuned Llama model for flexible response generation.</li>
+          <li>Built a custom training dataset of 100,000+ synthesized JSONL-formatted samples.</li>
+          <li>Created a GUI that ties together orchestration features, configuration controls, and runtime interaction.</li>
+        </ul>
+
+        <h3>Technology Stack</h3>
+        <div class="chips">
+          <span>Twitch API</span>
+          <span>OpenAI Models</span>
+          <span>Local Llama</span>
+          <span>ElevenLabs API</span>
+          <span>JSONL Dataset</span>
+          <span>GUI Tooling</span>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="section contact" id="contact">
+    <h2>Contact</h2>
+    <p>Ballston Lake, New York</p>
+    <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
+    <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
+  </footer>
+
+  <script src="main.js?v=20260304d"></script>
+</body>
+</html>

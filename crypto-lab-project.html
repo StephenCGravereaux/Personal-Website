@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stephen Gravereaux | CRYPTO CRYPTOGRAPHY LAB Project" />
+  <title>Stephen Gravereaux | CRYPTO LAB Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260304d" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="bg-orb orb-a" aria-hidden="true"></div>
+  <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html#top" class="brand">Stephen Gravereaux</a>
+      <ul>
+        <li><a href="index.html#top">Home</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="index.html#publications">Publication</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="page-hero reveal">
+      <p class="eyebrow">Undergraduate Research</p>
+      <h1>CRYPTO CRYPTOGRAPHY LAB</h1>
+      <p class="project-period">Late 2025</p>
+      <p class="intro">
+        Lightweight local LLM and text-to-speech workflow for privacy-sensitive,
+        document-grounded question answering.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Project Overview</span>
+        <h2>LLM + RAG + Text-to-Speech Assistant</h2>
+      </div>
+
+      <article class="project-card">
+        <p class="project-meta">Role: Undergraduate Researcher</p>
+        <p>
+          As an undergraduate researcher, I developed this project to support local police departments with a practical, lightweight interface for
+          asking operational questions over approved internal reference material. The workflow indexes documents through
+          a retrieval-augmented generation (RAG) layer, retrieves the most relevant context, and provides grounded answers
+          through a local LLM. Responses are then delivered in both text and speech using Piper TTS.
+        </p>
+
+        <div class="project-links">
+          <a class="btn btn-primary" href="https://github.com/StephenCGravereaux/Piper-TTS-Linux-Windows" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a class="btn btn-secondary" href="cafe-lab-project.html">View CAFE LAB Project</a>
+          <a class="btn btn-secondary" href="twitch-chatbot-project.html">View Twitch Chatbot Project</a>
+          <a class="btn btn-secondary" href="projects.html">Back to Projects</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Implementation Notes</span>
+        <h2>Design Approach</h2>
+      </div>
+      <article class="project-card">
+        <ul class="project-list">
+          <li>Combined local LLM reasoning with text-to-speech output for faster operator interaction.</li>
+          <li>Integrated a RAG retrieval flow to ground responses in indexed source documents.</li>
+          <li>Kept the architecture lightweight to run effectively on standard hardware.</li>
+          <li>Used Docker to containerize the runtime for repeatable setup and cross-platform consistency.</li>
+        </ul>
+
+        <h3>Technology Stack</h3>
+        <div class="chips">
+          <span>Python</span>
+          <span>Ollama</span>
+          <span>Piper TTS</span>
+          <span>RAG Workflow</span>
+          <span>Docker</span>
+          <span>Linux/Windows</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Data Handling</span>
+        <h2>Privacy and Repository Scope</h2>
+      </div>
+      <p>
+        Due to privacy and information sensitivity, only the text-to-speech and application-side integration system
+        is public in the GitHub repository. No correlated operational documents, confidential source material,
+        or agency-specific indexed data are included in the public codebase.
+      </p>
+    </section>
+  </main>
+
+  <footer class="section contact" id="contact">
+    <h2>Contact</h2>
+    <p>Ballston Lake, New York</p>
+    <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
+    <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
+  </footer>
+
+  <script src="main.js?v=20260304d"></script>
+</body>
+</html>
