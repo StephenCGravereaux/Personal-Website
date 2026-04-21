@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260304d" />
+  <link rel="stylesheet" href="styles.css?v=20260421b" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -18,14 +18,14 @@
 
   <header class="hero" id="top">
     <nav class="top-nav" aria-label="Primary">
-      <a href="index.html#top" class="brand">Stephen Gravereaux</a>
+      <a href="index.html" class="brand">Stephen Gravereaux</a>
       <ul>
-        <li><a href="index.html#top" aria-current="page">Home</a></li>
+        <li><a href="index.html" aria-current="page">Home</a></li>
         <li><a href="projects.html">Projects</a></li>
-        <li><a href="#publications">Publication</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="publication.html">Publication</a></li>
+        <li><a href="experience.html">Experience</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
 
@@ -39,7 +39,7 @@
         </p>
 
         <div class="cta-row">
-          <a class="btn btn-primary" href="#contact">Contact Me</a>
+          <a class="btn btn-primary" href="contact.html">Contact Me</a>
           <a class="btn btn-secondary" href="Stephen Gravereaux Resume.pdf" target="_blank" rel="noopener noreferrer">View Resume</a>
           <a class="btn btn-secondary" href="projects.html">View Projects</a>
         </div>
@@ -98,148 +98,39 @@
       </div>
     </section>
 
-    <section class="section publication reveal" id="publications">
+    <section class="section reveal" id="explore">
       <div class="section-header">
-        <span>Research</span>
-        <h2>Publication</h2>
+        <span>Explore</span>
+        <h2>Where to Go Next</h2>
       </div>
-      <article class="publication-card">
-        <p class="pub-status">Accepted in IEEE Big Data Conference</p>
-        <h3>Accuracy and Efficiency Trade-Offs in LLM-Based Malware Detection and Explanation: A Comparative Study of Parameter Tuning vs. Full Fine-Tuning</h3>
-        <p>
-          Comparative cybersecurity research evaluating efficient parameter tuning against full fine-tuning for
-          LLM-based malware detection explanation quality and computational performance.
-        </p>
-        <div class="project-links">
-          <a class="btn btn-primary" href="https://arxiv.org/html/2511.19654v1" target="_blank" rel="noopener noreferrer">Read Paper on arXiv</a>
-          <a class="btn btn-secondary" href="cafe-lab-project.html">View Related Project</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="section timeline" id="experience">
-      <div class="section-header reveal">
-        <span>Career</span>
-        <h2>Experience</h2>
-      </div>
-
-      <article class="timeline-card reveal">
-        <div class="card-head">
-          <h3>Undergraduate Grant-Funded Researcher</h3>
-          <p>University at Albany (UAlbany)</p>
-          <span>2025 to 2026</span>
-        </div>
-        <ul>
-          <li>Conducted applied cybersecurity research in university lab environments as an undergraduate researcher.</li>
-          <li>Developed and evaluated LLM-based workflows for explainability, retrieval-grounded response generation, and practical deployment.</li>
-          <li>Supported projects involving malware explanation quality, lightweight system design, and privacy-aware implementation practices.</li>
-        </ul>
-      </article>
-
-      <article class="timeline-card reveal">
-        <div class="card-head">
-          <h3>Data Systems Administrator</h3>
-          <p>United States Marine Corps</p>
-          <span>January 2019 to July 2022 | Okinawa, Japan and Darwin, Australia</span>
-        </div>
-        <ul>
-          <li>Managed and secured enterprise IT systems supporting mission-critical communications.</li>
-          <li>Accounted for over $200,000 in computers, switches, routers, and telephony devices.</li>
-          <li>Supported Linux and Microsoft/Windows environments with emphasis on network integrity.</li>
-          <li>Architected and maintained virtual machines in VMware ESXi and vSphere environments.</li>
-          <li>Configured Layer 2/3 routing and switching infrastructure and VoIP services.</li>
-          <li>Implemented file, print, and Active Directory services on managed server environments.</li>
-        </ul>
-      </article>
-
-      <article class="timeline-card reveal">
-        <div class="card-head">
-          <h3>Telecommunication Information System Coordinator</h3>
-          <p>United States Marine Corps</p>
-          <span>April 2021 to September 2021 | Okinawa, Japan</span>
-        </div>
-        <ul>
-          <li>Trained and aligned TISC staff while delivering frontline help desk support.</li>
-          <li>Maintained high service standards through ITSM-aligned support workflows.</li>
-          <li>Managed and mentored TISC clerks, including performance feedback development.</li>
-          <li>Provided in-person and phone-based client communication and technical support.</li>
-          <li>Troubleshot issues across network devices, user accounts, Active Directory, and VoIP services.</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="section skills" id="skills">
-      <div class="section-header reveal">
-        <span>Capabilities</span>
-        <h2>Core Skills</h2>
-      </div>
-      <div class="skill-grid">
-        <article class="skill-card reveal">
-          <h3>Technical</h3>
-          <div class="chips">
-            <span>Systems Administration</span>
-            <span>Network Infrastructure</span>
-            <span>Virtualization (VMware)</span>
-            <span>Active Directory</span>
-            <span>Cybersecurity</span>
-            <span>VoIP Configuration</span>
-            <span>Troubleshooting</span>
+      <div class="impact-grid">
+        <article class="impact-card">
+          <h3>Projects</h3>
+          <p>Research and personal builds across smartwatch privacy, LLM explainability, local assistants, and streaming automation.</p>
+          <div class="project-links">
+            <a class="btn btn-secondary" href="projects.html">View Projects</a>
           </div>
         </article>
-
-        <article class="skill-card reveal">
-          <h3>Tools & Platforms</h3>
-          <div class="chips">
-            <span>VMware vSphere</span>
-            <span>Cisco Call Manager</span>
-            <span>Windows Servers</span>
-            <span>Linux Servers</span>
-            <span>Routers & Switches</span>
-            <span>HTML/CSS</span>
-            <span>Python</span>
+        <article class="impact-card">
+          <h3>Publication</h3>
+          <p>IEEE Big Data accepted paper on parameter-efficient versus full LLM fine-tuning for malware explanation.</p>
+          <div class="project-links">
+            <a class="btn btn-secondary" href="publication.html">View Publication</a>
           </div>
         </article>
-
-        <article class="skill-card reveal">
-          <h3>Leadership & Communication</h3>
-          <div class="chips">
-            <span>Team Mentorship</span>
-            <span>Technical Training</span>
-            <span>Client Communication</span>
-            <span>Help Desk Operations</span>
-            <span>Problem Solving</span>
+        <article class="impact-card">
+          <h3>Experience &amp; Skills</h3>
+          <p>Marine Corps systems administration, university research, and the technical and leadership capabilities behind both.</p>
+          <div class="project-links">
+            <a class="btn btn-secondary" href="experience.html">Experience</a>
+            <a class="btn btn-secondary" href="skills.html">Skills</a>
           </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section two-column" id="education">
-      <div class="section-header reveal">
-        <span>Credentials</span>
-        <h2>Education & Certifications</h2>
-      </div>
-      <div class="columns">
-        <article class="timeline-card reveal">
-          <h3>Education</h3>
-          <p><strong>SUNY Albany</strong><br />Bachelor of Science in Cyber Security<br />June 2022 to Present</p>
-          <p><strong>0671 Data Systems Administrator Schoolhouse</strong><br />29 Palms, California<br />2019<br />Graduated top of class</p>
-          <p><strong>Saratoga Central Catholic High School</strong><br />Diploma<br />May 2018</p>
-        </article>
-
-        <article class="timeline-card reveal">
-          <h3>Certifications & Recognition</h3>
-          <ul>
-            <li>USMC Security+ Certification (March 2019)</li>
-            <li>USMC Networking+ Certification (February 2021)</li>
-            <li>Meritorious Mast (December 2018)</li>
-            <li>Meritorious Mast (February 2022)</li>
-          </ul>
         </article>
       </div>
     </section>
   </main>
 
-  <footer class="section contact" id="contact">
+  <footer class="section contact">
     <h2>Contact</h2>
     <p>Ballston Lake, New York</p>
     <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
@@ -247,6 +138,6 @@
     <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260304d"></script>
+  <script src="main.js?v=20260421b"></script>
 </body>
 </html>

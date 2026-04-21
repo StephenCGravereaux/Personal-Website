@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stephen Gravereaux | Smartwatch Behavioral Biometrics and Keystroke Inference Defense" />
+  <title>Stephen Gravereaux | Smartwatch Behavioral Biometrics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260421b" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="bg-orb orb-a" aria-hidden="true"></div>
+  <div class="bg-orb orb-b" aria-hidden="true"></div>
+
+  <header class="hero" id="top">
+    <nav class="top-nav" aria-label="Primary">
+      <a href="index.html" class="brand">Stephen Gravereaux</a>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="projects.html" aria-current="page">Projects</a></li>
+        <li><a href="publication.html">Publication</a></li>
+        <li><a href="experience.html">Experience</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="page-hero reveal">
+      <p class="eyebrow">Undergraduate Research</p>
+      <h1>Behavioral Biometric Analysis for Task and Keystroke Inference</h1>
+      <p class="project-period">2025-2026 | University at Albany | CAFE Lab</p>
+      <p class="intro">
+        An empirical study of motion-sensor side-channel attacks on smartwatches and
+        a differential-privacy defense that balances privacy against legitimate sensing utility.
+      </p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Project Overview</span>
+        <h2>Smartwatch Sensor Privacy and Differential Privacy Defense</h2>
+      </div>
+
+      <article class="project-card">
+        <p class="project-meta">Role: Undergraduate Researcher</p>
+        <p>
+          Conducted within the Cognitive Security Accountability, Fairness and Explainability (CAFE) Lab at the
+          University at Albany under the same advisor as the EMBER + LLM explanation work.
+        </p>
+        <p>
+          Wearables continuously stream accelerometer and gyroscope data to support health and activity features,
+          but the same signals can leak typing-related behavior to a malicious app. This project designs and evaluates
+          a reproducible pipeline that (1) demonstrates the attack, (2) applies feature-level differential privacy
+          with the IBM <code>diffprivlib</code> Laplace mechanism, and (3) quantifies the privacy-utility tradeoff at
+          fixed privacy budgets.
+        </p>
+        <p>
+          The work is framed as a feasibility and defense study rather than an end-to-end keystroke-content
+          recovery attack. It uses two public datasets independently: WISDM (smartwatch motion for typing-vs-non-typing
+          task inference) and Keystroke100 (keystroke dynamics for closed-set user identification). The core research
+          question is how much attacker accuracy is lost at a given privacy budget, and how much legitimate activity-recognition
+          utility must be sacrificed in exchange.
+        </p>
+        <p class="project-meta" style="margin-top:1rem">Status: Manuscript drafted — not yet submitted to IEEE.</p>
+
+        <div class="project-links">
+          <a class="btn btn-primary" href="https://www.youtube.com/watch?v=rBB7jPDDM3I" target="_blank" rel="noopener noreferrer">Watch Research Talk</a>
+          <a class="btn btn-secondary" href="https://github.com/StephenCGravereaux/Behavioral-Biometrics-Scripts" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a class="btn btn-secondary" href="https://cbs6albany.com/news/local/ualbany-cybersecurity-student-studies-how-smart-device-data-can-fuel-targeted-attacks-smartwatches-new-york-stephen-gravereaux" target="_blank" rel="noopener noreferrer">CBS6 Albany Feature</a>
+          <a class="btn btn-secondary" href="https://www.albany.edu/news-center/news/2026-showcase-2026-cyber-student-explores-smartwatch-security-risks" target="_blank" rel="noopener noreferrer">UAlbany News Feature</a>
+          <a class="btn btn-secondary" href="projects.html">Back to Projects</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Methodology</span>
+        <h2>Three-Stage Evaluation Pipeline</h2>
+      </div>
+      <article class="project-card">
+        <ul class="project-list">
+          <li><strong>Stage 1 - Attack demonstration.</strong> Trained typing-vs-non-typing classifiers on WISDM smartwatch accelerometer and gyroscope features (182 numeric features per sample) with subject-disjoint train/validation/test splits, evaluating Logistic Regression, Random Forest, and SVM-RBF. In parallel, trained 100-class keystroke-dynamics identification models on Keystroke100 using 13 latency and pressure features.</li>
+          <li><strong>Stage 2 - Differential privacy defense.</strong> Implemented feature-level Laplace perturbation with IBM <code>diffprivlib</code>. Per-feature clipping bounds are computed from the training split only and reused for validation and test. The per-feature Laplace scale is b_j = (U_j - L_j) / &epsilon;, with one fixed privacy budget per run.</li>
+          <li><strong>Stage 3 - Privacy-utility evaluation.</strong> Measured attack accuracy degradation under both clean-trained and attacker-aware retraining, and measured utility loss on a non-typing activity-recognition task using a Random Forest utility model.</li>
+          <li><strong>Parameter sweep.</strong> Evaluated &epsilon; values of 0.05, 0.1, 0.5, 1.0, and 2.0 to characterize how fixed privacy budgets move the privacy-utility frontier.</li>
+          <li><strong>Reproducibility.</strong> Fixed random seeds, public datasets only, and a documented pipeline so the benchmark can be reproduced and extended.</li>
+        </ul>
+
+        <h3>Technology Stack</h3>
+        <div class="chips">
+          <span>Python</span>
+          <span>NumPy</span>
+          <span>pandas</span>
+          <span>SciPy</span>
+          <span>scikit-learn</span>
+          <span>IBM diffprivlib</span>
+          <span>Laplace Mechanism</span>
+          <span>WISDM Dataset</span>
+          <span>Keystroke100 Dataset</span>
+        </div>
+
+        <div class="paper-figures">
+          <figure class="paper-figure">
+            <img src="assets/papers/behavior-flowcharts.png" alt="Two pipeline diagrams from the manuscript: an attack-demonstration flow training task-inference and keystroke-dynamics models, and a differential-privacy evaluation flow applying the Laplace mechanism." loading="lazy" />
+            <figcaption><strong>Figures 1 &amp; 2.</strong> Attack demonstration pipeline (typing-task inference and keystroke-dynamics user identification) and the paired differential-privacy evaluation pipeline applying the Laplace mechanism with epsilon-sweep evaluation.</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
+        <span>Why It Matters</span>
+        <h2>Context and Impact</h2>
+      </div>
+      <article class="project-card">
+        <p>
+          Prior work (MoLe, Maiti et al.) has shown that unrestricted wrist-motion streams can be used to infer
+          typing activity and narrow candidate words. The standard defense - block sensor access while typing is
+          detected - breaks legitimate uses like fall detection and health tracking. This project evaluates whether
+          fixed-noise differential privacy can offer a middle path, and reports measured tradeoffs rather than
+          claiming a universal defense.
+        </p>
+        <p>
+          The work was featured by CBS6 Albany and by the University at Albany news center as part of ongoing
+          coverage of consumer wearable security risk.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="section contact" id="contact">
+    <h2>Contact</h2>
+    <p>Ballston Lake, New York</p>
+    <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
+    <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <p class="copyright">&copy; <span id="year"></span> Stephen Gravereaux</p>
+  </footer>
+
+  <script src="main.js?v=20260421b"></script>
+</body>
+</html>

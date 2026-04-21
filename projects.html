@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260304d" />
+  <link rel="stylesheet" href="styles.css?v=20260421b" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -18,14 +18,14 @@
 
   <header class="hero" id="top">
     <nav class="top-nav" aria-label="Primary">
-      <a href="index.html#top" class="brand">Stephen Gravereaux</a>
+      <a href="index.html" class="brand">Stephen Gravereaux</a>
       <ul>
-        <li><a href="index.html#top">Home</a></li>
+        <li><a href="index.html">Home</a></li>
         <li><a href="projects.html" aria-current="page">Projects</a></li>
-        <li><a href="index.html#publications">Publication</a></li>
-        <li><a href="index.html#experience">Experience</a></li>
-        <li><a href="index.html#skills">Skills</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="publication.html">Publication</a></li>
+        <li><a href="experience.html">Experience</a></li>
+        <li><a href="skills.html">Skills</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
 
@@ -46,6 +46,27 @@
         <h2>Selected Work</h2>
       </div>
 
+      <article class="project-card" id="smartwatch-biometrics-project">
+        <h3>Behavioral Biometric Analysis for Task and Keystroke Inference</h3>
+        <p class="project-period">2025-2026</p>
+        <p class="project-meta">Undergraduate Research Project</p>
+        <p>
+          Empirical study of smartwatch motion-sensor side-channel risk and a fixed-noise differential privacy
+          defense built with IBM diffprivlib. Evaluates privacy-utility tradeoffs across multiple privacy budgets
+          using public WISDM and Keystroke100 datasets. Featured by CBS6 Albany and UAlbany News.
+        </p>
+        <ul class="project-list">
+          <li>Focus: Quantifying how fixed-noise DP affects both attacker accuracy and legitimate activity-recognition utility.</li>
+          <li>Core methods: Laplace-mechanism feature perturbation, typing-task inference, keystroke-dynamics user identification, &epsilon;-sweep evaluation.</li>
+        </ul>
+        <div class="project-links">
+          <a class="btn btn-primary" href="smartwatch-biometrics-project.html">Open Project Page</a>
+          <a class="btn btn-secondary" href="https://www.youtube.com/watch?v=rBB7jPDDM3I" target="_blank" rel="noopener noreferrer">Research Talk</a>
+          <a class="btn btn-secondary" href="https://cbs6albany.com/news/local/ualbany-cybersecurity-student-studies-how-smart-device-data-can-fuel-targeted-attacks-smartwatches-new-york-stephen-gravereaux" target="_blank" rel="noopener noreferrer">CBS6 Albany</a>
+          <a class="btn btn-secondary" href="https://www.albany.edu/news-center/news/2026-showcase-2026-cyber-student-explores-smartwatch-security-risks" target="_blank" rel="noopener noreferrer">UAlbany News</a>
+        </div>
+      </article>
+
       <article class="project-card" id="cafe-lab-project">
         <h3>Cognitive Security Accountability, Fairness and Explainability (CAFE LAB)</h3>
         <p class="project-period">2025-2026</p>
@@ -59,8 +80,9 @@
         </ul>
         <div class="project-links">
           <a class="btn btn-primary" href="cafe-lab-project.html">Open Project Page</a>
-          <a class="btn btn-secondary" href="https://github.com/StephenCGravereaux/EMBER-LLM-Comparison-Pipeline" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a class="btn btn-secondary" href="https://ieeexplore.ieee.org/document/11401473" target="_blank" rel="noopener noreferrer">Paper (IEEE Xplore)</a>
           <a class="btn btn-secondary" href="https://arxiv.org/html/2511.19654v1" target="_blank" rel="noopener noreferrer">Paper (arXiv)</a>
+          <a class="btn btn-secondary" href="https://github.com/StephenCGravereaux/EMBER-LLM-Comparison-Pipeline" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </article>
 
@@ -109,6 +131,6 @@
     <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260304d"></script>
+  <script src="main.js?v=20260421b"></script>
 </body>
 </html>
