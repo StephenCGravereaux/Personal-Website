@@ -3,12 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Stephen Gravereaux | Smartwatch Behavioral Biometrics and Keystroke Inference Defense" />
+  <meta name="description" content="Empirical study of smartwatch motion-sensor side-channel risk and a differential privacy defense evaluated across multiple privacy budgets." />
+  <link rel="canonical" href="https://stephencgravereaux.github.io/Personal-Website/smartwatch-biometrics-project.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Stephen Gravereaux" />
+  <meta property="og:title" content="Behavioral Biometrics & Keystroke Inference — Stephen Gravereaux" />
+  <meta property="og:description" content="Empirical study of smartwatch motion-sensor side-channel risk and a differential privacy defense evaluated across multiple privacy budgets." />
+  <meta property="og:url" content="https://stephencgravereaux.github.io/Personal-Website/smartwatch-biometrics-project.html" />
+  <meta property="og:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stephen Gravereaux — Systems Administration and Cybersecurity" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Behavioral Biometrics & Keystroke Inference — Stephen Gravereaux" />
+  <meta name="twitter:description" content="Empirical study of smartwatch motion-sensor side-channel risk and a differential privacy defense evaluated across multiple privacy budgets." />
+  <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Smartwatch Behavioral Biometrics</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260421b" />
+  <link rel="stylesheet" href="styles.css?v=20260422a" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -117,6 +131,64 @@
 
     <section class="section reveal">
       <div class="section-header">
+        <span>Interactive Demo</span>
+        <h2>Feel Your Own Keystroke Signature</h2>
+      </div>
+      <article class="project-card">
+        <p>
+          The keystroke-dynamics side of this project identifies users from how they type, not what they type.
+          The two timing signals the model relies on are <strong>dwell</strong> (how long a key is held down) and
+          <strong>flight</strong> (the gap between releasing one key and pressing the next). Type a sentence below
+          to watch your own timing signature form in real time. Nothing is recorded, sent, or stored.
+        </p>
+
+        <div class="keystroke-demo">
+          <div class="keystroke-input-wrap">
+            <input
+              id="keystroke-input"
+              class="keystroke-input"
+              type="text"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="Type a sentence here, e.g. the quick brown fox jumps over the lazy dog"
+              aria-label="Keystroke biometrics demo input"
+            />
+            <button id="keystroke-reset" type="button" class="btn btn-secondary">Reset</button>
+          </div>
+
+          <div class="keystroke-charts">
+            <div class="keystroke-chart">
+              <h4>Dwell time (key-hold duration)</h4>
+              <p>How long each key stays pressed. Typists differ by tens of milliseconds here.</p>
+              <canvas id="keystroke-dwell" aria-label="Dwell time bar chart"></canvas>
+            </div>
+            <div class="keystroke-chart">
+              <h4>Flight time (inter-key interval)</h4>
+              <p>Gap from releasing one key to pressing the next. This is where rhythm shows up.</p>
+              <canvas id="keystroke-flight" aria-label="Flight time bar chart"></canvas>
+            </div>
+          </div>
+
+          <div class="keystroke-bottom">
+            <div id="keystroke-stats" class="keystroke-stats" aria-live="polite"></div>
+            <div class="keystroke-score" aria-live="polite">
+              <div class="score-value" id="keystroke-score">—</div>
+              <div class="score-label" id="keystroke-score-label">Start typing to begin</div>
+            </div>
+          </div>
+
+          <p class="keystroke-note">
+            Heuristic only — the real classifier uses 13 latency and pressure features across many keystrokes,
+            not this five-number summary. The point is to show that typing produces measurable, distinctive signals
+            that a motion-sensor side channel can approximate on a smartwatch.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="section-header">
         <span>Why It Matters</span>
         <h2>Context and Impact</h2>
       </div>
@@ -144,6 +216,7 @@
     <p class="copyright">&copy; <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260421b"></script>
+  <script src="main.js?v=20260422a"></script>
+  <script src="keystroke-demo.js?v=20260422a"></script>
 </body>
 </html>

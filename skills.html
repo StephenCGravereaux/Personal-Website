@@ -3,12 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Stephen Gravereaux | Skills, Education, and Certifications" />
+  <meta name="description" content="Technical capabilities across systems administration, network infrastructure, virtualization, cybersecurity, and leadership — plus USMC certifications and ongoing SUNY Albany coursework." />
+  <link rel="canonical" href="https://stephencgravereaux.github.io/Personal-Website/skills.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Stephen Gravereaux" />
+  <meta property="og:title" content="Skills & Certifications — Stephen Gravereaux" />
+  <meta property="og:description" content="Technical capabilities across systems administration, network infrastructure, virtualization, cybersecurity, and leadership — plus USMC certifications and ongoing SUNY Albany coursework." />
+  <meta property="og:url" content="https://stephencgravereaux.github.io/Personal-Website/skills.html" />
+  <meta property="og:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Stephen Gravereaux — Systems Administration and Cybersecurity" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Skills & Certifications — Stephen Gravereaux" />
+  <meta name="twitter:description" content="Technical capabilities across systems administration, network infrastructure, virtualization, cybersecurity, and leadership — plus USMC certifications and ongoing SUNY Albany coursework." />
+  <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Skills</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260421b" />
+  <link rel="stylesheet" href="styles.css?v=20260422a" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -39,6 +53,24 @@
   </header>
 
   <main id="main-content">
+    <section class="section reveal">
+      <div class="section-header">
+        <span>At a Glance</span>
+        <h2>Skills Constellation</h2>
+      </div>
+      <p>
+        An interactive view of the capabilities below. Bubble size reflects relative depth of use; color groups
+        related areas. Drag a bubble to rearrange, or click a legend category to isolate it.
+      </p>
+
+      <div class="skills-bubble-wrap">
+        <span id="skills-hint" class="skills-hint">Drag · Hover · Filter by category</span>
+        <canvas id="skills-bubble" aria-label="Interactive skills bubble map"></canvas>
+      </div>
+      <div id="skills-legend" class="skills-legend" role="list" aria-label="Skill category filters"></div>
+      <div id="skills-tooltip" class="skills-tooltip" role="tooltip"></div>
+    </section>
+
     <section class="section skills">
       <div class="section-header reveal">
         <span>Capabilities</span>
@@ -118,6 +150,7 @@
     <p class="copyright">&copy; <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260421b"></script>
+  <script src="main.js?v=20260422a"></script>
+  <script src="skills-bubble.js?v=20260422a"></script>
 </body>
 </html>
