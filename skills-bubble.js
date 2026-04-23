@@ -10,9 +10,11 @@
     systems:    { label: 'Systems',         color: '#00f0ff' },
     network:    { label: 'Network & Voice', color: '#8a2be2' },
     security:   { label: 'Security',        color: '#ff007f' },
+    ai:         { label: 'AI & Data',       color: '#2ee5d1' },
     tools:      { label: 'Tools & Code',    color: '#39ff14' },
     leadership: { label: 'Leadership',      color: '#ffb347' }
   };
+  const catKeys = Object.keys(categories);
 
   const skills = [
     { name: 'Systems Admin',        cat: 'systems',    weight: 10 },
@@ -28,8 +30,16 @@
     { name: 'Cybersecurity',        cat: 'security',   weight: 9 },
     { name: 'Security+',            cat: 'security',   weight: 8 },
     { name: 'Network+',             cat: 'security',   weight: 7 },
+    { name: 'Machine Learning',     cat: 'ai',         weight: 8 },
+    { name: 'Deep Learning',        cat: 'ai',         weight: 7 },
+    { name: 'Generative AI',        cat: 'ai',         weight: 8 },
+    { name: 'LLM Fine-Tuning',      cat: 'ai',         weight: 7 },
+    { name: 'Data Analytics',       cat: 'ai',         weight: 7 },
+    { name: 'RAG',                  cat: 'ai',         weight: 8 },
+    { name: 'Prompt Engineering',   cat: 'ai',         weight: 7 },
+    { name: 'PyTorch',              cat: 'ai',         weight: 6 },
     { name: 'Troubleshooting',      cat: 'tools',      weight: 8 },
-    { name: 'Python',               cat: 'tools',      weight: 6 },
+    { name: 'Python',               cat: 'tools',      weight: 7 },
     { name: 'HTML / CSS',           cat: 'tools',      weight: 5 },
     { name: 'Help Desk',            cat: 'leadership', weight: 7 },
     { name: 'Mentorship',           cat: 'leadership', weight: 7 },
@@ -38,14 +48,31 @@
     { name: 'Problem Solving',      cat: 'leadership', weight: 8 }
   ];
 
+  // Screen-reader accessible copy of the full skill set (canvas itself is pointer-only).
+  const host = canvas.parentElement;
+  if (host && !host.querySelector('.skills-sr-list')) {
+    const srList = document.createElement('ul');
+    srList.className = 'skills-sr-list visually-hidden';
+    srList.setAttribute('aria-label', 'Skills list');
+    const byCat = {};
+    skills.forEach((s) => { (byCat[s.cat] = byCat[s.cat] || []).push(s.name); });
+    catKeys.forEach((k) => {
+      const group = document.createElement('li');
+      group.textContent = `${categories[k].label}: ${(byCat[k] || []).join(', ')}.`;
+      srList.appendChild(group);
+    });
+    host.appendChild(srList);
+  }
+
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   let width = 0, height = 0;
   const fontFamily = getComputedStyle(document.body).fontFamily;
 
+  // Wider spread: weights 5–10 now map to radii 38 – 58 (was 34 – 46).
   const nodes = skills.map((s) => ({
     ...s,
-    radius: 22 + s.weight * 2.4,
+    radius: 18 + s.weight * 4,
     x: 0, y: 0, vx: 0, vy: 0
   }));
 
@@ -58,12 +85,25 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
+  // Each category gets its own attractor point arranged evenly around
+  // the canvas centre, so bubbles spatially cluster by category.
+  function catCenter(cat) {
+    const idx = catKeys.indexOf(cat);
+    const total = catKeys.length;
+    const angle = (idx / total) * Math.PI * 2 - Math.PI / 2;
+    const rx = width * 0.27;
+    const ry = height * 0.30;
+    return {
+      x: width / 2 + Math.cos(angle) * rx,
+      y: height / 2 + Math.sin(angle) * ry
+    };
+  }
+
   function placeInitial() {
-    nodes.forEach((n, i) => {
-      const a = (i / nodes.length) * Math.PI * 2;
-      const r = Math.min(width, height) * 0.28;
-      n.x = width / 2 + Math.cos(a) * r;
-      n.y = height / 2 + Math.sin(a) * r;
+    nodes.forEach((n) => {
+      const c = catCenter(n.cat);
+      n.x = c.x + (Math.random() - 0.5) * 50;
+      n.y = c.y + (Math.random() - 0.5) * 50;
       n.vx = 0; n.vy = 0;
     });
   }
@@ -73,21 +113,30 @@
   window.addEventListener('resize', () => {
     sizeCanvas();
     placeInitial();
+    wake();
   });
 
   let dragNode = null;
   let hoverNode = null;
   let activeCategory = null;
   let mouseX = 0, mouseY = 0;
+  let running = true;
+  let restFrames = 0;
+
+  function wake() {
+    restFrames = 0;
+    if (!running) {
+      running = true;
+      requestAnimationFrame(loop);
+    }
+  }
 
   function step() {
-    const cx = width / 2;
-    const cy = height / 2;
-
     for (const n of nodes) {
       if (n === dragNode) continue;
-      n.vx += (cx - n.x) * 0.0018;
-      n.vy += (cy - n.y) * 0.0018;
+      const c = catCenter(n.cat);
+      n.vx += (c.x - n.x) * 0.0042;
+      n.vy += (c.y - n.y) * 0.0042;
     }
 
     for (let i = 0; i < nodes.length; i++) {
@@ -96,33 +145,36 @@
         const dx = b.x - a.x;
         const dy = b.y - a.y;
         const dist = Math.hypot(dx, dy) || 0.01;
-        const minDist = a.radius + b.radius + 6;
-        if (dist < minDist * 1.6) {
-          const strength = (minDist * 1.6 - dist) / (minDist * 1.6);
-          const fx = (dx / dist) * strength * 1.4;
-          const fy = (dy / dist) * strength * 1.4;
+        const minDist = a.radius + b.radius + 5;
+        if (dist < minDist * 1.35) {
+          const strength = (minDist * 1.35 - dist) / (minDist * 1.35);
+          const fx = (dx / dist) * strength * 1.5;
+          const fy = (dy / dist) * strength * 1.5;
           if (a !== dragNode) { a.vx -= fx; a.vy -= fy; }
           if (b !== dragNode) { b.vx += fx; b.vy += fy; }
         }
       }
     }
 
+    let ke = 0;
     for (const n of nodes) {
       if (n === dragNode) {
         n.x = mouseX; n.y = mouseY;
         n.vx = 0; n.vy = 0;
         continue;
       }
-      n.vx *= 0.84;
-      n.vy *= 0.84;
+      n.vx *= 0.82;
+      n.vy *= 0.82;
       n.x += n.vx;
       n.y += n.vy;
+      ke += n.vx * n.vx + n.vy * n.vy;
 
       if (n.x < n.radius) { n.x = n.radius; n.vx = Math.abs(n.vx) * 0.3; }
       if (n.x > width - n.radius) { n.x = width - n.radius; n.vx = -Math.abs(n.vx) * 0.3; }
       if (n.y < n.radius) { n.y = n.radius; n.vy = Math.abs(n.vy) * 0.3; }
       if (n.y > height - n.radius) { n.y = height - n.radius; n.vy = -Math.abs(n.vy) * 0.3; }
     }
+    return ke;
   }
 
   function draw() {
@@ -155,7 +207,7 @@
       ctx.save();
       ctx.globalAlpha = dim;
       ctx.fillStyle = '#ededed';
-      const fs = Math.max(10, Math.min(13, n.radius / 2.8));
+      const fs = Math.max(10, Math.min(13, n.radius / 3.2));
       ctx.font = `600 ${fs}px ${fontFamily}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -173,11 +225,19 @@
     }
   }
 
-  let running = true;
+  const REST_KE = 0.02;
+  const REST_FRAMES = 60;
+
   function loop() {
     if (!running) return;
-    step();
+    const ke = step();
     draw();
+    if (!dragNode && !hoverNode && ke < REST_KE) {
+      restFrames++;
+      if (restFrames > REST_FRAMES) { running = false; return; }
+    } else {
+      restFrames = 0;
+    }
     requestAnimationFrame(loop);
   }
 
@@ -211,6 +271,7 @@
         tooltip.style.display = 'none';
       }
     }
+    wake();
   });
 
   canvas.addEventListener('pointerdown', (e) => {
@@ -220,12 +281,14 @@
       dragNode = n;
       canvas.setPointerCapture(e.pointerId);
       canvas.style.cursor = 'grabbing';
+      wake();
     }
   });
 
   const release = () => {
     dragNode = null;
     canvas.style.cursor = hoverNode ? 'grab' : 'default';
+    wake();
   };
   canvas.addEventListener('pointerup', release);
   canvas.addEventListener('pointercancel', release);
@@ -244,9 +307,10 @@
       item.innerHTML = `<span class="skills-legend-swatch" style="background:${v.color}"></span>${v.label}`;
       item.addEventListener('click', () => {
         activeCategory = activeCategory === k ? null : k;
-        legend.querySelectorAll('.skills-legend-item').forEach(el => {
+        legend.querySelectorAll('.skills-legend-item').forEach((el) => {
           el.classList.toggle('is-active', el.dataset.cat === activeCategory);
         });
+        wake();
       });
       legend.appendChild(item);
     });
@@ -255,9 +319,8 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       running = false;
-    } else if (!running) {
-      running = true;
-      loop();
+    } else {
+      wake();
     }
   });
 

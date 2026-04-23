@@ -236,16 +236,67 @@
             </linearGradient>
           </defs>
 
-          <path class="net-link" d="M 130 90 L 220 90" />
-          <path class="net-link" d="M 340 90 L 440 90" />
+          <path id="npath-wan"       class="net-link" d="M 130 90 L 220 90" />
+          <path id="npath-fw-core"   class="net-link" d="M 340 90 L 440 90" />
 
-          <path class="net-link is-secure" d="M 480 120 L 480 180" />
-          <path class="net-link is-secure" d="M 220 180 L 740 180" />
-          <path class="net-link is-secure" d="M 220 180 L 220 240" />
-          <path class="net-link is-secure" d="M 480 180 L 480 240" />
-          <path class="net-link is-secure" d="M 740 180 L 740 240" />
+          <path id="npath-core-down" class="net-link is-secure" d="M 480 120 L 480 180" />
+          <path id="npath-trunk"     class="net-link is-secure" d="M 220 180 L 740 180" />
+          <path id="npath-vm-drop"   class="net-link is-secure" d="M 220 180 L 220 240" />
+          <path id="npath-cucm-drop" class="net-link is-secure" d="M 480 180 L 480 240" />
+          <path id="npath-ep-drop"   class="net-link is-secure" d="M 740 180 L 740 240" />
 
-          <path class="net-link" d="M 220 380 L 220 410 L 740 410 L 740 380" opacity="0.45" />
+          <path id="npath-return" class="net-link" d="M 220 380 L 220 410 L 740 410 L 740 380" opacity="0.45" />
+
+          <!-- Composite routing paths used only for packet animation (not rendered). -->
+          <path id="npath-ingress" d="M 130 90 L 220 90 L 340 90 L 440 90 L 480 120 L 480 180 L 220 180 L 220 240" fill="none" stroke="none" />
+          <path id="npath-to-ep"   d="M 480 180 L 740 180 L 740 240" fill="none" stroke="none" />
+          <path id="npath-to-cucm" d="M 480 180 L 480 240" fill="none" stroke="none" />
+
+          <g class="net-packets" aria-hidden="true">
+            <circle class="net-packet net-packet-cyan" r="3.5">
+              <animateMotion dur="4.2s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-ingress" />
+              </animateMotion>
+            </circle>
+            <circle class="net-packet net-packet-cyan" r="3.5">
+              <animateMotion dur="4.2s" begin="1.4s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-ingress" />
+              </animateMotion>
+            </circle>
+            <circle class="net-packet net-packet-cyan" r="3.5">
+              <animateMotion dur="4.2s" begin="2.8s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-ingress" />
+              </animateMotion>
+            </circle>
+
+            <circle class="net-packet net-packet-pink" r="3">
+              <animateMotion dur="2.6s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-to-ep" />
+              </animateMotion>
+            </circle>
+            <circle class="net-packet net-packet-pink" r="3">
+              <animateMotion dur="2.6s" begin="1.3s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-to-ep" />
+              </animateMotion>
+            </circle>
+
+            <circle class="net-packet net-packet-purple" r="3">
+              <animateMotion dur="2.0s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-to-cucm" />
+              </animateMotion>
+            </circle>
+
+            <circle class="net-packet net-packet-return" r="2.6">
+              <animateMotion dur="5.2s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-return" />
+              </animateMotion>
+            </circle>
+            <circle class="net-packet net-packet-return" r="2.6">
+              <animateMotion dur="5.2s" begin="2.6s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#npath-return" />
+              </animateMotion>
+            </circle>
+          </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#00f0ff"
              data-net-title="Internet / WAN"

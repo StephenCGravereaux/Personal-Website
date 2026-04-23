@@ -986,6 +986,19 @@ html.reduce-motion *::after {
   }
 }
 
+/* Screen-reader-only content */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ============ Skills bubble map ============ */
 .skills-bubble-wrap {
   position: relative;
@@ -1178,6 +1191,27 @@ html.reduce-motion *::after {
 .net-link.is-secure {
   stroke-dasharray: 5 4;
   stroke: rgba(0, 240, 255, 0.35);
+  animation: net-dash-flow 2.2s linear infinite;
+}
+
+@keyframes net-dash-flow {
+  to { stroke-dashoffset: -18; }
+}
+
+html.reduce-motion .net-link.is-secure {
+  animation: none;
+}
+
+.net-packet {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.net-packet-cyan    { fill: #00f0ff; color: #00f0ff; }
+.net-packet-pink    { fill: #ff007f; color: #ff007f; }
+.net-packet-purple  { fill: #8a2be2; color: #8a2be2; }
+.net-packet-return  { fill: rgba(255,255,255,0.55); color: rgba(255,255,255,0.7); }
+
+html.reduce-motion .net-packets {
+  display: none;
 }
 
 .net-hint {
