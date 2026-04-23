@@ -19,10 +19,7 @@
   <meta name="twitter:description" content="Marine Corps systems administration, university research, and the technical and leadership work behind both." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Experience</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260422a" />
+  <link rel="stylesheet" href="styles.css?v=20260422c" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -39,6 +36,7 @@
         <li><a href="publication.html">Publication</a></li>
         <li><a href="experience.html" aria-current="page">Experience</a></li>
         <li><a href="skills.html">Skills</a></li>
+        <li><a href="resume.html">Resume</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
@@ -54,6 +52,75 @@
 
   <main id="main-content">
     <section class="section timeline">
+      <div class="deployment-map reveal">
+        <div class="dm-head">
+          <h3>Where I've Worked</h3>
+          <p class="dm-sub">Four postings across three continents, 2019 to present. Hover or focus a marker for details.</p>
+        </div>
+        <svg class="dm-svg" viewBox="0 0 960 320" role="img" aria-label="World map showing postings in 29 Palms California, Okinawa Japan, Darwin Australia, and Albany New York">
+          <path class="dm-continent" d="M 60 80 L 200 60 L 240 100 L 260 160 L 220 200 L 140 210 L 80 170 Z" />
+          <path class="dm-continent" d="M 210 210 L 240 200 L 260 260 L 240 300 L 200 310 L 180 270 Z" />
+          <path class="dm-continent" d="M 440 70 L 500 70 L 520 100 L 500 120 L 460 130 L 430 110 Z" />
+          <path class="dm-continent" d="M 460 140 L 510 140 L 525 200 L 510 250 L 470 260 L 450 220 L 440 170 Z" />
+          <path class="dm-continent" d="M 520 60 L 760 50 L 810 100 L 780 180 L 720 190 L 620 160 L 540 130 Z" />
+          <path class="dm-continent" d="M 730 240 L 820 240 L 830 280 L 800 300 L 740 300 L 720 270 Z" />
+
+          <path class="dm-arc" d="M 85 170 Q 420 40 735 150" />
+          <path class="dm-arc" d="M 735 150 Q 800 210 760 260" />
+          <path class="dm-arc" d="M 760 260 Q 450 30 150 110" />
+
+          <g class="dm-node" tabindex="0" role="button" style="color:#ffa940"
+             data-dm-title="29 Palms, California"
+             data-dm-desc="Data Systems Schoolhouse — USMC MOS training in Windows/Linux administration, Active Directory, virtualization, and Layer 2/3 networking."
+             data-dm-dates="2019">
+            <circle class="dm-pulse" cx="85" cy="170" r="9" />
+            <circle class="dm-dot" cx="85" cy="170" r="6.5" fill="currentColor" />
+            <text class="dm-label" x="85" y="154" text-anchor="middle">29 Palms</text>
+            <text class="dm-date" x="85" y="192" text-anchor="middle">2019</text>
+          </g>
+          <g class="dm-node" tabindex="0" role="button" style="color:#00f0ff"
+             data-dm-title="Okinawa, Japan"
+             data-dm-desc="Data Systems Administrator — USMC. Primary posting; also served as Telecommunication Information System Coordinator (Apr–Sep 2021) and returned here after the 2021 Darwin rotation."
+             data-dm-dates="2019 – 2022">
+            <circle class="dm-pulse" cx="735" cy="150" r="9" />
+            <circle class="dm-dot" cx="735" cy="150" r="6.5" fill="currentColor" />
+            <text class="dm-label" x="735" y="134" text-anchor="middle">Okinawa</text>
+            <text class="dm-date" x="735" y="172" text-anchor="middle">2019 – 2022</text>
+          </g>
+          <g class="dm-node" tabindex="0" role="button" style="color:#ff007f"
+             data-dm-title="Darwin, Australia"
+             data-dm-desc="USMC rotational deployment from Okinawa supporting mission-critical communications; returned to Japan afterward."
+             data-dm-dates="2021">
+            <circle class="dm-pulse" cx="760" cy="260" r="9" />
+            <circle class="dm-dot" cx="760" cy="260" r="6.5" fill="currentColor" />
+            <text class="dm-label" x="760" y="285" text-anchor="middle">Darwin</text>
+            <text class="dm-date" x="760" y="302" text-anchor="middle">2021</text>
+          </g>
+          <g class="dm-node" tabindex="0" role="button" style="color:#8a2be2"
+             data-dm-title="Albany, New York"
+             data-dm-desc="B.S. Cyber Security at SUNY Albany. Undergraduate research in the CAFE and CRYPTO labs on LLM explainability, RAG, and behavioral biometrics."
+             data-dm-dates="Jun 2022 – Present">
+            <circle class="dm-pulse" cx="150" cy="110" r="9" />
+            <circle class="dm-dot" cx="150" cy="110" r="6.5" fill="currentColor" />
+            <text class="dm-label" x="150" y="94" text-anchor="middle">Albany, NY</text>
+            <text class="dm-date" x="150" y="132" text-anchor="middle">2022 – Present</text>
+          </g>
+        </svg>
+        <div class="dm-tooltip" role="tooltip" aria-hidden="true"></div>
+      </div>
+
+      <div class="exp-chip-bar reveal" role="group" aria-label="Filter experience by capability">
+        <span class="chip-label">Filter</span>
+        <button type="button" class="exp-chip" data-filter="research">Research</button>
+        <button type="button" class="exp-chip" data-filter="systems">Systems</button>
+        <button type="button" class="exp-chip" data-filter="networking">Networking</button>
+        <button type="button" class="exp-chip" data-filter="virtualization">Virtualization</button>
+        <button type="button" class="exp-chip" data-filter="voip">VoIP</button>
+        <button type="button" class="exp-chip" data-filter="security">Security</button>
+        <button type="button" class="exp-chip" data-filter="leadership">Leadership</button>
+        <button type="button" class="exp-chip-clear" hidden>Clear</button>
+      </div>
+
       <article class="timeline-card reveal">
         <div class="card-head">
           <h3>Undergraduate Grant-Funded Researcher</h3>
@@ -61,9 +128,9 @@
           <span>2025 to 2026</span>
         </div>
         <ul>
-          <li>Conducted applied cybersecurity research in university lab environments as an undergraduate researcher.</li>
-          <li>Developed and evaluated LLM-based workflows for explainability, retrieval-grounded response generation, and practical deployment.</li>
-          <li>Supported projects involving malware explanation quality, lightweight system design, and privacy-aware implementation practices.</li>
+          <li data-tags="research security">Conducted applied cybersecurity research in university lab environments as an undergraduate researcher.</li>
+          <li data-tags="research">Developed and evaluated LLM-based workflows for explainability, retrieval-grounded response generation, and practical deployment.</li>
+          <li data-tags="research security">Supported projects involving malware explanation quality, lightweight system design, and privacy-aware implementation practices.</li>
         </ul>
       </article>
 
@@ -71,15 +138,16 @@
         <div class="card-head">
           <h3>Data Systems Administrator</h3>
           <p>United States Marine Corps</p>
-          <span>January 2019 to July 2022 | Okinawa, Japan and Darwin, Australia</span>
+          <span>2019 to July 2022 | Okinawa, Japan (2021 rotation to Darwin, Australia)</span>
         </div>
         <ul>
-          <li>Managed and secured enterprise IT systems supporting mission-critical communications.</li>
-          <li>Accounted for over $200,000 in computers, switches, routers, and telephony devices.</li>
-          <li>Supported Linux and Microsoft/Windows environments with emphasis on network integrity.</li>
-          <li>Architected and maintained virtual machines in VMware ESXi and vSphere environments.</li>
-          <li>Configured Layer 2/3 routing and switching infrastructure and VoIP services.</li>
-          <li>Implemented file, print, and Active Directory services on managed server environments.</li>
+          <li data-tags="systems security">Managed and secured enterprise IT systems supporting mission-critical communications.</li>
+          <li data-tags="systems leadership">Accounted for over $200,000 in computers, switches, routers, and telephony devices.</li>
+          <li data-tags="systems security">Supported Linux and Microsoft/Windows environments with emphasis on network integrity.</li>
+          <li data-tags="virtualization systems">Architected and maintained virtual machines in VMware ESXi and vSphere environments.</li>
+          <li data-tags="networking voip">Configured Layer 2/3 routing and switching infrastructure and VoIP services.</li>
+          <li data-tags="systems">Implemented file, print, and Active Directory services on managed server environments.</li>
+          <li data-tags="systems networking">Deployed with the Okinawa unit to Darwin, Australia in 2021 to support rotational communications operations, then returned to Japan.</li>
         </ul>
       </article>
 
@@ -90,11 +158,23 @@
           <span>April 2021 to September 2021 | Okinawa, Japan</span>
         </div>
         <ul>
-          <li>Trained and aligned TISC staff while delivering frontline help desk support.</li>
-          <li>Maintained high service standards through ITSM-aligned support workflows.</li>
-          <li>Managed and mentored TISC clerks, including performance feedback development.</li>
-          <li>Provided in-person and phone-based client communication and technical support.</li>
-          <li>Troubleshot issues across network devices, user accounts, Active Directory, and VoIP services.</li>
+          <li data-tags="leadership">Trained and aligned TISC staff while delivering frontline help desk support.</li>
+          <li data-tags="leadership">Maintained high service standards through ITSM-aligned support workflows.</li>
+          <li data-tags="leadership">Managed and mentored TISC clerks, including performance feedback development.</li>
+          <li data-tags="leadership">Provided in-person and phone-based client communication and technical support.</li>
+          <li data-tags="networking voip systems">Troubleshot issues across network devices, user accounts, Active Directory, and VoIP services.</li>
+        </ul>
+      </article>
+
+      <article class="timeline-card reveal">
+        <div class="card-head">
+          <h3>Data Systems Schoolhouse</h3>
+          <p>United States Marine Corps</p>
+          <span>2019 | 29 Palms, California</span>
+        </div>
+        <ul>
+          <li data-tags="systems networking">Completed formal MOS training in data systems administration covering Windows and Linux administration, Active Directory, virtualization, and Layer 2/3 networking fundamentals.</li>
+          <li data-tags="systems security">Graduated into the Data Systems Administrator role at Okinawa, Japan.</li>
         </ul>
       </article>
     </section>
@@ -108,6 +188,6 @@
     <p class="copyright">&copy; <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260422a"></script>
+  <script src="main.js?v=20260422c"></script>
 </body>
 </html>

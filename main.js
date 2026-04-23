@@ -130,3 +130,165 @@ if (!prefersReducedMotion && isFinePointer) {
     });
   });
 }
+
+// Animated stat counters in hero — hero is always visible on load, so
+// run immediately instead of relying on IntersectionObserver (which some
+// environments fail to fire for already-in-viewport elements).
+const statCounts = document.querySelectorAll('.stat-count');
+if (statCounts.length) {
+  const renderStat = (el, value) => {
+    const prefix = el.dataset.countPrefix || '';
+    const suffix = el.dataset.countSuffix || '';
+    el.textContent = `${prefix}${value}${suffix}`;
+  };
+  if (prefersReducedMotion) {
+    statCounts.forEach((el) => {
+      renderStat(el, parseInt(el.dataset.countTo || '0', 10));
+    });
+  } else {
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    const animateCount = (el) => {
+      const target = parseInt(el.dataset.countTo || '0', 10);
+      const duration = 1100;
+      const start = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        renderStat(el, Math.round(easeOut(t) * target));
+        if (t < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    };
+    statCounts.forEach((el) => {
+      renderStat(el, 0);
+      window.setTimeout(() => animateCount(el), 200);
+    });
+  }
+}
+
+// Parallax tilt on the photo only — tilting the whole .profile-card
+// rotates around a point below the photo, which visually throws the
+// photo off-center. Pivoting on .photo-frame keeps the rotation origin
+// at the photo's own center.
+const photoFrame = document.querySelector('.profile-card .photo-frame');
+if (photoFrame && !prefersReducedMotion && isFinePointer) {
+  const resetPhotoTilt = () => {
+    photoFrame.style.removeProperty('transform');
+    photoFrame.classList.remove('is-tilting');
+  };
+  photoFrame.addEventListener('pointerenter', () => {
+    photoFrame.classList.add('is-tilting');
+  });
+  photoFrame.addEventListener('pointerleave', resetPhotoTilt);
+  photoFrame.addEventListener('pointercancel', resetPhotoTilt);
+  photoFrame.addEventListener('pointermove', (event) => {
+    const rect = photoFrame.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width;
+    const py = (event.clientY - rect.top) / rect.height;
+    const rx = (0.5 - py) * 10;
+    const ry = (px - 0.5) * 12;
+    photoFrame.style.setProperty(
+      'transform',
+      `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`,
+    );
+  });
+}
+
+// Experience chip filter
+const chipBar = document.querySelector('.exp-chip-bar');
+const timelineSection = document.querySelector('.timeline');
+if (chipBar && timelineSection) {
+  const chips = chipBar.querySelectorAll('.exp-chip');
+  const clearBtn = chipBar.querySelector('.exp-chip-clear');
+  const allBullets = timelineSection.querySelectorAll('.timeline-card li[data-tags]');
+
+  const applyFilter = () => {
+    const active = Array.from(chips)
+      .filter((c) => c.classList.contains('is-active'))
+      .map((c) => c.dataset.filter);
+    if (active.length === 0) {
+      timelineSection.classList.remove('is-filtering');
+      allBullets.forEach((li) => li.classList.remove('is-match'));
+      if (clearBtn) clearBtn.hidden = true;
+      return;
+    }
+    timelineSection.classList.add('is-filtering');
+    allBullets.forEach((li) => {
+      const tags = (li.dataset.tags || '').split(/\s+/);
+      li.classList.toggle('is-match', active.some((a) => tags.includes(a)));
+    });
+    if (clearBtn) clearBtn.hidden = false;
+  };
+
+  chips.forEach((chip) => {
+    chip.setAttribute('aria-pressed', 'false');
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('is-active');
+      chip.setAttribute('aria-pressed', chip.classList.contains('is-active') ? 'true' : 'false');
+      applyFilter();
+    });
+  });
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      chips.forEach((c) => {
+        c.classList.remove('is-active');
+        c.setAttribute('aria-pressed', 'false');
+      });
+      applyFilter();
+    });
+  }
+}
+
+// Deployment map tooltip
+const deployMap = document.querySelector('.deployment-map');
+if (deployMap) {
+  const tooltip = deployMap.querySelector('.dm-tooltip');
+  const svg = deployMap.querySelector('.dm-svg');
+  const nodes = deployMap.querySelectorAll('.dm-node');
+
+  const showTip = (node) => {
+    if (!tooltip || !svg) return;
+    const title = node.dataset.dmTitle || '';
+    const desc = node.dataset.dmDesc || '';
+    const dates = node.dataset.dmDates || '';
+
+    tooltip.textContent = '';
+    const titleEl = document.createElement('strong');
+    titleEl.textContent = title;
+    tooltip.appendChild(titleEl);
+    tooltip.appendChild(document.createTextNode(desc));
+    if (dates) {
+      const dateEl = document.createElement('div');
+      dateEl.className = 'dm-tip-dates';
+      dateEl.textContent = dates;
+      tooltip.appendChild(dateEl);
+    }
+
+    const dot = node.querySelector('.dm-dot');
+    if (!dot) return;
+    const mapRect = deployMap.getBoundingClientRect();
+    const dotRect = dot.getBoundingClientRect();
+    const left = dotRect.left + dotRect.width / 2 - mapRect.left;
+    const top = dotRect.top - mapRect.top - 12;
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+    tooltip.classList.add('is-visible');
+    tooltip.setAttribute('aria-hidden', 'false');
+  };
+
+  const hideTip = () => {
+    if (!tooltip) return;
+    tooltip.classList.remove('is-visible');
+    tooltip.setAttribute('aria-hidden', 'true');
+  };
+
+  nodes.forEach((node) => {
+    node.addEventListener('pointerenter', () => showTip(node));
+    node.addEventListener('pointerleave', hideTip);
+    node.addEventListener('focus', () => showTip(node));
+    node.addEventListener('blur', hideTip);
+  });
+
+  window.addEventListener('scroll', hideTip, { passive: true });
+  window.addEventListener('resize', hideTip);
+}
