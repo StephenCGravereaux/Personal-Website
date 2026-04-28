@@ -4,6 +4,14 @@
   const tooltip = document.getElementById('skills-tooltip');
   const legend = document.getElementById('skills-legend');
   const hint = document.getElementById('skills-hint');
+
+  // The tooltip uses position:fixed, but its current ancestor (.reveal section)
+  // applies a CSS transform — which creates a containing block and breaks
+  // viewport-relative positioning. Reparent it to <body> so clientX/Y math is
+  // correct again.
+  if (tooltip && tooltip.parentElement !== document.body) {
+    document.body.appendChild(tooltip);
+  }
   const reduceMotion = document.documentElement.classList.contains('reduce-motion');
 
   const categories = {
