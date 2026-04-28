@@ -1894,6 +1894,97 @@ html.reduce-motion .now-pulse::before { animation: none; }
   opacity: 0.75;
   filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.4));
 }
+
+/* Animated reveal: when the map's data-dm-anim is "pending" we hide arcs and
+   nodes; the JS sequencer flips data-dm-anim to "playing" then sets per-arc
+   and per-node ".is-revealed" classes in chronological order. */
+.deployment-map[data-dm-anim="pending"] .dm-arc,
+.deployment-map[data-dm-anim="playing"] .dm-arc {
+  opacity: 0;
+  stroke-dashoffset: var(--dm-arc-len, 1200);
+  stroke-dasharray: var(--dm-arc-len, 1200);
+}
+.deployment-map[data-dm-anim="playing"] .dm-arc.is-revealed {
+  opacity: 0.85;
+  stroke-dashoffset: 0;
+  stroke-dasharray: var(--dm-arc-len, 1200);
+  transition: stroke-dashoffset var(--dm-arc-dur, 1200ms) cubic-bezier(0.4, 0.0, 0.2, 1),
+              opacity 200ms ease-out;
+}
+.deployment-map[data-dm-anim="playing"] .dm-arc.is-revealed.is-settled {
+  stroke-dasharray: 4 4;
+  transition: stroke-dasharray 280ms ease-out, opacity 200ms ease-out;
+}
+
+.deployment-map[data-dm-anim="pending"] .dm-node,
+.deployment-map[data-dm-anim="playing"] .dm-node {
+  opacity: 0;
+  transform: scale(0.5);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 320ms ease-out, transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.deployment-map[data-dm-anim="playing"] .dm-node.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+.deployment-map[data-dm-anim="done"] .dm-arc,
+.deployment-map[data-dm-anim="done"] .dm-node {
+  opacity: 1;
+}
+.deployment-map[data-dm-anim="done"] .dm-arc {
+  opacity: 0.85;
+}
+
+html.reduce-motion .deployment-map[data-dm-anim="pending"] .dm-arc,
+html.reduce-motion .deployment-map[data-dm-anim="playing"] .dm-arc,
+html.reduce-motion .deployment-map[data-dm-anim="pending"] .dm-node,
+html.reduce-motion .deployment-map[data-dm-anim="playing"] .dm-node {
+  opacity: 1;
+  transform: none;
+  stroke-dashoffset: 0;
+  stroke-dasharray: 4 4;
+  transition: none;
+}
+
+.dm-replay {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border-strong);
+  background: var(--card-bg-soft);
+  color: var(--muted-strong);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+.dm-replay:hover,
+.dm-replay:focus-visible {
+  color: var(--foreground);
+  border-color: var(--prism-blue);
+  background: rgba(0, 240, 255, 0.06);
+  outline: none;
+}
+.dm-replay:active { transform: translateY(1px); }
+.dm-replay[disabled] {
+  opacity: 0.55;
+  cursor: progress;
+}
+.dm-replay-icon {
+  display: inline-block;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.dm-replay[data-dm-spinning="true"] .dm-replay-icon {
+  animation: dm-replay-spin 900ms linear infinite;
+}
+@keyframes dm-replay-spin { to { transform: rotate(360deg); } }
+html.reduce-motion .dm-replay-icon { animation: none !important; }
 .dm-node {
   cursor: pointer;
   outline: none;

@@ -291,4 +291,118 @@ if (deployMap) {
 
   window.addEventListener('scroll', hideTip, { passive: true });
   window.addEventListener('resize', hideTip);
+
+  // Chronological reveal: arcs draw on and dots pop in, in posting order.
+  const orderedNodes = Array.from(nodes)
+    .map((n) => ({ el: n, order: parseInt(n.dataset.dmOrder || '0', 10) }))
+    .filter((n) => n.order > 0)
+    .sort((a, b) => a.order - b.order)
+    .map((n) => n.el);
+  const orderedArcs = Array.from(deployMap.querySelectorAll('.dm-arc'))
+    .map((a) => ({ el: a, order: parseInt(a.dataset.dmArcOrder || '0', 10) }))
+    .filter((a) => a.order > 0)
+    .sort((a, b) => a.order - b.order)
+    .map((a) => a.el);
+  const replayBtn = deployMap.querySelector('.dm-replay');
+
+  // Pre-measure each arc so the dash animation duration is proportional to
+  // path length (so arc 3 — the long Darwin→Albany trip — draws slower).
+  orderedArcs.forEach((arc) => {
+    let len = 1200;
+    try { len = arc.getTotalLength(); } catch (_e) { /* keep default */ }
+    arc.style.setProperty('--dm-arc-len', String(len));
+    const ms = Math.round(Math.min(1700, Math.max(700, len * 1.45)));
+    arc.style.setProperty('--dm-arc-dur', `${ms}ms`);
+    arc.dataset.dmArcDurMs = String(ms);
+  });
+
+  let timeouts = [];
+  const clearTimers = () => {
+    timeouts.forEach((id) => window.clearTimeout(id));
+    timeouts = [];
+  };
+  const scheduleAt = (ms, fn) => {
+    timeouts.push(window.setTimeout(fn, ms));
+  };
+
+  let totalDurMs = 0;
+
+  const resetSequence = () => {
+    clearTimers();
+    deployMap.setAttribute('data-dm-anim', 'pending');
+    orderedArcs.forEach((a) => a.classList.remove('is-revealed', 'is-settled'));
+    orderedNodes.forEach((n) => n.classList.remove('is-revealed'));
+  };
+
+  const playSequence = () => {
+    if (prefersReducedMotion) {
+      deployMap.setAttribute('data-dm-anim', 'done');
+      orderedArcs.forEach((a) => a.classList.add('is-revealed', 'is-settled'));
+      orderedNodes.forEach((n) => n.classList.add('is-revealed'));
+      if (replayBtn) replayBtn.hidden = false;
+      return;
+    }
+    resetSequence();
+    deployMap.setAttribute('data-dm-anim', 'playing');
+    if (replayBtn) {
+      replayBtn.disabled = true;
+      replayBtn.dataset.dmSpinning = 'true';
+    }
+    let t = 200;
+    // First posting reveal kicks the sequence off.
+    scheduleAt(t, () => orderedNodes[0] && orderedNodes[0].classList.add('is-revealed'));
+    t += 480;
+    orderedArcs.forEach((arc, i) => {
+      const dur = parseInt(arc.dataset.dmArcDurMs || '1200', 10);
+      const arcStart = t;
+      scheduleAt(arcStart, () => arc.classList.add('is-revealed'));
+      t += dur;
+      // Once the arc has drawn fully, swap to the dashed style and reveal the
+      // destination posting.
+      scheduleAt(t, () => arc.classList.add('is-settled'));
+      const target = orderedNodes[i + 1];
+      if (target) {
+        scheduleAt(t + 80, () => target.classList.add('is-revealed'));
+        t += 320;
+      }
+    });
+    totalDurMs = t + 200;
+    scheduleAt(totalDurMs, () => {
+      deployMap.setAttribute('data-dm-anim', 'done');
+      if (replayBtn) {
+        replayBtn.disabled = false;
+        replayBtn.dataset.dmSpinning = 'false';
+        replayBtn.hidden = false;
+      }
+    });
+  };
+
+  if (replayBtn) {
+    replayBtn.addEventListener('click', () => {
+      if (replayBtn.disabled) return;
+      // Reset to "pending" first so styles re-apply, then play next frame.
+      resetSequence();
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(playSequence);
+      });
+    });
+  }
+
+  if ('IntersectionObserver' in window && !prefersReducedMotion) {
+    const playOnce = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            playOnce.disconnect();
+            playSequence();
+            break;
+          }
+        }
+      },
+      { threshold: 0.35 }
+    );
+    playOnce.observe(deployMap);
+  } else {
+    playSequence();
+  }
 }
