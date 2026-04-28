@@ -1016,6 +1016,14 @@ html.reduce-motion *::after {
   touch-action: none;
 }
 
+@media (max-width: 620px) {
+  #skills-bubble { height: 460px; }
+}
+@media (max-width: 380px) {
+  #skills-bubble { height: 440px; }
+  .skills-hint { font-size: 0.7rem; top: 0.5rem; left: 0.6rem; }
+}
+
 .skills-hint {
   position: absolute;
   top: 0.8rem;
@@ -1862,19 +1870,29 @@ html.reduce-motion .now-pulse::before { animation: none; }
   width: 100%;
   height: auto;
   display: block;
-  max-height: 340px;
+  max-height: 420px;
 }
-.dm-continent {
-  fill: rgba(255, 255, 255, 0.035);
-  stroke: rgba(255, 255, 255, 0.14);
-  stroke-width: 0.7;
+.dm-graticule {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 0.6;
+  stroke-dasharray: 2 4;
+}
+.dm-land {
+  fill: rgba(138, 200, 255, 0.07);
+  stroke: rgba(150, 200, 255, 0.55);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
 .dm-arc {
   fill: none;
-  stroke: var(--prism-blue);
-  stroke-width: 1.3;
-  stroke-dasharray: 5 4;
-  opacity: 0.5;
+  stroke: url(#dm-arc-grad);
+  stroke-width: 1.4;
+  stroke-dasharray: 4 4;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.4));
 }
 .dm-node {
   cursor: pointer;
@@ -1887,17 +1905,25 @@ html.reduce-motion .now-pulse::before { animation: none; }
 }
 .dm-node text.dm-label {
   fill: var(--foreground);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.03em;
   pointer-events: none;
+  paint-order: stroke fill;
+  stroke: rgba(8, 8, 12, 0.9);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
 }
 .dm-node text.dm-date {
   fill: var(--muted);
-  font-size: 10px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.02em;
   pointer-events: none;
+  paint-order: stroke fill;
+  stroke: rgba(8, 8, 12, 0.85);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 .dm-tooltip {
   position: absolute;
@@ -1944,8 +1970,11 @@ html.reduce-motion .now-pulse::before { animation: none; }
 }
 html.reduce-motion .dm-pulse { animation: none; }
 @media (max-width: 620px) {
-  .dm-node text.dm-label { font-size: 11px; }
-  .dm-node text.dm-date { font-size: 9px; }
+  .deployment-map { padding: 1rem 0.9rem 1.1rem; }
+  .dm-svg { max-height: 320px; }
+  .dm-node text.dm-label { font-size: 16px; stroke-width: 4px; }
+  .dm-node text.dm-date { font-size: 13px; stroke-width: 3.5px; }
+  .dm-land { stroke-width: 0.7; }
 }
 
 /* ============ Press row — place (already styled above) ============ */

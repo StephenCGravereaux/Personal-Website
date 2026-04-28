@@ -67,14 +67,27 @@
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   let width = 0, height = 0;
+  let radiusScale = 1;
   const fontFamily = getComputedStyle(document.body).fontFamily;
 
-  // Wider spread: weights 5–10 now map to radii 38 – 58 (was 34 – 46).
   const nodes = skills.map((s) => ({
     ...s,
-    radius: 18 + s.weight * 4,
+    radius: 0,
     x: 0, y: 0, vx: 0, vy: 0
   }));
+
+  // Desktop baseline: radius = 18 + weight*4 (yields 38–58 for weights 5–10).
+  // Narrow viewports shrink uniformly so 29 bubbles still fit without overlap.
+  function recomputeRadii() {
+    if (width < 380) radiusScale = 0.55;
+    else if (width < 480) radiusScale = 0.65;
+    else if (width < 620) radiusScale = 0.78;
+    else if (width < 760) radiusScale = 0.9;
+    else radiusScale = 1;
+    nodes.forEach((n) => {
+      n.radius = (18 + n.weight * 4) * radiusScale;
+    });
+  }
 
   function sizeCanvas() {
     const rect = canvas.getBoundingClientRect();
@@ -83,16 +96,16 @@
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    recomputeRadii();
   }
 
-  // Each category gets its own attractor point arranged evenly around
-  // the canvas centre, so bubbles spatially cluster by category.
   function catCenter(cat) {
     const idx = catKeys.indexOf(cat);
     const total = catKeys.length;
     const angle = (idx / total) * Math.PI * 2 - Math.PI / 2;
-    const rx = width * 0.27;
-    const ry = height * 0.30;
+    const spread = width < 500 ? 0.34 : 0.27;
+    const rx = width * spread;
+    const ry = height * (width < 500 ? 0.34 : 0.30);
     return {
       x: width / 2 + Math.cos(angle) * rx,
       y: height / 2 + Math.sin(angle) * ry
