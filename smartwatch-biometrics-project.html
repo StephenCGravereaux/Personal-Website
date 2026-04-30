@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Empirical study of smartwatch motion-sensor side-channel risk and a differential privacy defense evaluated across multiple privacy budgets." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Smartwatch Behavioral Biometrics</title>
-  <link rel="stylesheet" href="styles.css?v=20260422a" />
+  <link rel="stylesheet" href="styles.css?v=20260429a" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -181,6 +181,78 @@
             not this five-number summary. The point is to show that typing produces measurable, distinctive signals
             that a motion-sensor side channel can approximate on a smartwatch.
           </p>
+
+          <div class="dp-defense">
+            <div class="dp-defense-head">
+              <h4>Now apply the differential-privacy defense</h4>
+              <p>
+                The paper adds calibrated <strong>Laplace noise</strong> per feature, scaled by a privacy budget
+                <em>ε</em>: lower ε means stronger privacy and noisier observations. Drag the slider to see what
+                the attacker actually receives at each budget — and watch their identifiability score collapse
+                toward chance.
+              </p>
+            </div>
+
+            <div class="dp-slider-row">
+              <span class="dp-slider-end">Stronger privacy</span>
+              <input
+                id="dp-epsilon"
+                type="range"
+                min="0"
+                max="5"
+                step="1"
+                value="3"
+                aria-label="Privacy budget epsilon"
+                list="dp-epsilon-ticks"
+              />
+              <datalist id="dp-epsilon-ticks">
+                <option value="0" label="0.05"></option>
+                <option value="1" label="0.1"></option>
+                <option value="2" label="0.5"></option>
+                <option value="3" label="1.0"></option>
+                <option value="4" label="2.0"></option>
+                <option value="5" label="off"></option>
+              </datalist>
+              <span class="dp-slider-end">No defense</span>
+            </div>
+
+            <div class="dp-slider-readout">
+              <span id="dp-epsilon-value" class="dp-eps">ε = 1.0</span>
+              <span id="dp-scale-value" class="dp-scale">Laplace scale: dwell b ≈ — ms · flight b ≈ — ms</span>
+            </div>
+
+            <div class="keystroke-charts dp-charts">
+              <div class="keystroke-chart">
+                <h4>Dwell — what the attacker sees</h4>
+                <p>Same keystrokes, observed through the DP-noised channel.</p>
+                <canvas id="dp-dwell" aria-label="DP-noised dwell time bar chart"></canvas>
+              </div>
+              <div class="keystroke-chart">
+                <h4>Flight — what the attacker sees</h4>
+                <p>Per-feature Laplace perturbation applied to the inter-key timing.</p>
+                <canvas id="dp-flight" aria-label="DP-noised flight time bar chart"></canvas>
+              </div>
+            </div>
+
+            <div class="dp-score-row">
+              <div class="dp-score-card">
+                <span class="dp-score-label">Attacker identifiability — clean</span>
+                <span class="dp-score-value" id="dp-clean-score">—</span>
+                <span class="dp-score-sub">Without DP defense</span>
+              </div>
+              <div class="dp-score-card dp-score-protected">
+                <span class="dp-score-label">Under DP, ε = <span id="dp-eps-inline">1.0</span></span>
+                <span class="dp-score-value" id="dp-noisy-score">—</span>
+                <span class="dp-score-sub" id="dp-noisy-sub">Drag the slider to compare</span>
+              </div>
+            </div>
+
+            <p class="keystroke-note">
+              Illustrative — the live demo applies one Laplace draw per displayed sample. The published study
+              evaluates ε ∈ {0.05, 0.1, 0.5, 1.0, 2.0} across all 13 features with subject-disjoint splits and
+              attacker-aware retraining. See the manuscript for the measured privacy-utility frontier.
+            </p>
+          </div>
         </div>
       </article>
     </section>
@@ -215,6 +287,6 @@
   </footer>
 
   <script src="main.js?v=20260422a"></script>
-  <script src="keystroke-demo.js?v=20260422a"></script>
+  <script src="keystroke-demo.js?v=20260429a"></script>
 </body>
 </html>

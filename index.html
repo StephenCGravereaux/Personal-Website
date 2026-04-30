@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Marine Corps–trained systems administrator pursuing a B.S. in Cyber Security at SUNY Albany. Experience across VMware, Active Directory, VoIP, and mission-critical communications." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Systems Administrator</title>
-  <link rel="stylesheet" href="styles.css?v=20260422c" />
+  <link rel="stylesheet" href="styles.css?v=20260429a" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -223,10 +223,18 @@
       <p>
         A simplified view of the kind of environment I support day to day — edge security, virtualization,
         directory services, and voice, connecting end users to the systems they depend on. Hover any component
-        for what it does and what I've touched on it.
+        for what it does, or run a simulated incident below to watch the controls fire.
       </p>
 
-      <div class="net-topology-wrap">
+      <div class="net-sim-controls" role="group" aria-label="Network incident simulations">
+        <span class="net-sim-label">Simulate</span>
+        <button type="button" class="net-sim-btn" data-net-scenario="ingress">Malicious Ingress</button>
+        <button type="button" class="net-sim-btn" data-net-scenario="auth">Brute-Force Auth</button>
+        <button type="button" class="net-sim-btn" data-net-scenario="vlan">VLAN Hop Attempt</button>
+        <button type="button" class="net-sim-btn net-sim-reset" data-net-scenario="reset">Reset</button>
+      </div>
+
+      <div class="net-topology-wrap" data-net-state="idle">
         <svg id="net-topology" viewBox="0 0 960 440" role="img" aria-label="Example enterprise network topology with internet, firewall, switch, VMware host, Active Directory, VoIP, and clients">
           <defs>
             <linearGradient id="net-glow" x1="0" x2="1" y1="0" y2="0">
@@ -299,6 +307,7 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#00f0ff"
+             data-net-id="internet"
              data-net-title="Internet / WAN"
              data-net-info="Public upstream. All ingress and egress traffic is filtered at the edge.">
             <circle cx="80" cy="90" r="38" fill="rgba(0,240,255,0.08)" stroke="#00f0ff" stroke-width="1.2" />
@@ -306,6 +315,7 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#ff007f"
+             data-net-id="firewall"
              data-net-title="Edge Firewall"
              data-net-info="Perimeter filtering, NAT, and ACL enforcement. First line of defense between internal services and the internet.">
             <rect x="220" y="60" width="120" height="60" rx="8" fill="rgba(255,0,127,0.08)" stroke="#ff007f" stroke-width="1.2" />
@@ -314,6 +324,7 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#8a2be2"
+             data-net-id="switch"
              data-net-title="Core Switch / Router"
              data-net-info="Layer 2/3 aggregation. VLAN segmentation, inter-subnet routing, and uplink to the edge firewall. Cisco-style switching and routing.">
             <rect x="440" y="60" width="120" height="60" rx="8" fill="rgba(138,43,226,0.10)" stroke="#8a2be2" stroke-width="1.2" />
@@ -322,11 +333,12 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#00f0ff"
+             data-net-id="vmware"
              data-net-title="VMware ESXi Host"
              data-net-info="Hypervisor consolidating multiple server workloads. Responsible for VM lifecycle, storage, and vSwitch networking. I managed provisioning, patching, and capacity on VMware vSphere.">
             <rect x="120" y="240" width="200" height="140" rx="10" fill="rgba(0,240,255,0.06)" stroke="#00f0ff" stroke-width="1.2" />
             <text x="220" y="264" text-anchor="middle" fill="#00f0ff">VMware Host</text>
-            <rect x="140" y="280" width="75" height="38" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(0,240,255,0.45)" />
+            <rect class="net-vm-tile" data-net-id="ad" x="140" y="280" width="75" height="38" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(0,240,255,0.45)" />
             <text x="177" y="295" text-anchor="middle" fill="#ededed" style="font-size:10px">AD DC</text>
             <text x="177" y="309" text-anchor="middle" fill="rgba(255,255,255,0.55)" style="font-size:8px;font-weight:500">Win Server</text>
             <rect x="225" y="280" width="75" height="38" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(0,240,255,0.45)" />
@@ -338,6 +350,7 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#8a2be2"
+             data-net-id="cucm"
              data-net-title="Cisco Call Manager (CUCM)"
              data-net-info="VoIP call control for unit communications. Phone registration, dial plan, and extension management. Ran CUCM moves/adds/changes and handled endpoint support.">
             <rect x="420" y="240" width="120" height="90" rx="10" fill="rgba(138,43,226,0.10)" stroke="#8a2be2" stroke-width="1.2" />
@@ -348,6 +361,7 @@
           </g>
 
           <g class="net-node" tabindex="0" role="button" style="color:#ff007f"
+             data-net-id="endpoints"
              data-net-title="Endpoints / Users"
              data-net-info="Workstations and IP phones authenticating against Active Directory, accessing file shares, and placing calls through CUCM. Help desk and account support lives here.">
             <rect x="680" y="240" width="120" height="140" rx="10" fill="rgba(255,0,127,0.07)" stroke="#ff007f" stroke-width="1.2" />
@@ -359,8 +373,14 @@
             <rect x="718" y="350" width="8" height="6" rx="1" fill="rgba(255,0,127,0.45)" />
             <text x="752" y="358" text-anchor="start" fill="rgba(255,255,255,0.7)" style="font-size:9px">IP Phone</text>
           </g>
+
+          <g class="net-sim-fx" aria-hidden="true"></g>
         </svg>
         <div class="net-tooltip" role="tooltip"></div>
+        <div class="net-sim-readout" aria-live="polite">
+          <span class="net-sim-state" data-state-kind="idle">Idle</span>
+          <span class="net-sim-detail">Pick a scenario to walk through how this stack reacts.</span>
+        </div>
       </div>
       <p class="net-hint">Solid lines are physical uplinks · dashed lines are tunneled / inter-VLAN traffic</p>
     </section>
@@ -406,6 +426,6 @@
   </footer>
 
   <script src="main.js?v=20260422c"></script>
-  <script src="network-topology.js?v=20260422a"></script>
+  <script src="network-topology.js?v=20260429a"></script>
 </body>
 </html>

@@ -9,11 +9,32 @@
   const scoreLabel = document.getElementById('keystroke-score-label');
   const resetBtn = document.getElementById('keystroke-reset');
 
+  // DP demo elements (optional — only present on the smartwatch project page)
+  const dpDwellCanvas = document.getElementById('dp-dwell');
+  const dpFlightCanvas = document.getElementById('dp-flight');
+  const dpEpsInput = document.getElementById('dp-epsilon');
+  const dpEpsValueEl = document.getElementById('dp-epsilon-value');
+  const dpScaleEl = document.getElementById('dp-scale-value');
+  const dpEpsInline = document.getElementById('dp-eps-inline');
+  const dpCleanScoreEl = document.getElementById('dp-clean-score');
+  const dpNoisyScoreEl = document.getElementById('dp-noisy-score');
+  const dpNoisySubEl = document.getElementById('dp-noisy-sub');
+  const hasDp = !!(dpDwellCanvas && dpFlightCanvas && dpEpsInput);
+
   const pressed = new Map();
   let lastUp = null;
   const dwells = [];
   const flights = [];
   const dpr = window.devicePixelRatio || 1;
+
+  // Map slider index -> epsilon. Index 5 = off (no noise).
+  const EPS_TABLE = [0.05, 0.1, 0.5, 1.0, 2.0, Infinity];
+  const epsFromSlider = () => EPS_TABLE[Math.max(0, Math.min(5, parseInt(dpEpsInput.value, 10) || 0))];
+
+  // Population-typical ranges used to derive Laplace scale b = range / eps.
+  // Matches "feature-level Laplace with per-feature clipping bounds" from the paper.
+  const DWELL_RANGE = 250;   // ms
+  const FLIGHT_RANGE = 400;  // ms
 
   const fontFamily = getComputedStyle(document.body).fontFamily;
 
@@ -37,7 +58,19 @@
     return Math.sqrt(v);
   }
 
-  function drawBars(canvas, data, color, emptyLabel) {
+  // Inverse-CDF Laplace sample with scale b (mean 0).
+  function laplace(b) {
+    if (!isFinite(b) || b <= 0) return 0;
+    const u = Math.random() - 0.5;
+    return -b * Math.sign(u) * Math.log(1 - 2 * Math.abs(u));
+  }
+
+  function noisify(arr, b) {
+    if (!isFinite(b) || b <= 0) return arr.slice();
+    return arr.map((v) => Math.max(0, v + laplace(b)));
+  }
+
+  function drawBars(canvas, data, color, emptyLabel, opts = {}) {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -59,21 +92,23 @@
     }
 
     const slice = data.slice(-48);
-    const max = Math.max(...slice, 80) * 1.1;
+    const ceiling = opts.ceiling || Math.max(...slice, 80) * 1.1;
+    const max = Math.max(ceiling, 1);
     const n = slice.length;
     const w = (canvas.width - pad * 2) / n;
     const h = canvas.height - pad * 2;
 
     ctx.fillStyle = color;
     slice.forEach((v, i) => {
-      const bh = Math.max(2 * dpr, (v / max) * h);
+      const clipped = Math.min(v, max);
+      const bh = Math.max(2 * dpr, (clipped / max) * h);
       const x = pad + i * w + dpr;
       const y = canvas.height - pad - bh;
       ctx.fillRect(x, y, Math.max(2, w - 2 * dpr), bh);
     });
 
     const med = median(slice);
-    const medY = canvas.height - pad - (med / max) * h;
+    const medY = canvas.height - pad - (Math.min(med, max) / max) * h;
     ctx.strokeStyle = 'rgba(255,255,255,0.35)';
     ctx.setLineDash([4 * dpr, 4 * dpr]);
     ctx.beginPath();
@@ -89,7 +124,7 @@
     ctx.fillText(`median ${med.toFixed(0)} ms`, pad + 4 * dpr, medY - 8 * dpr);
   }
 
-  function update() {
+  function updateClean() {
     const dMed = median(dwells);
     const fMed = median(flights);
     const dStd = stddev(dwells);
@@ -125,6 +160,82 @@
     drawBars(flightCanvas, flights, 'rgba(255, 0, 127, 0.78)', 'Flight time will appear as you type');
   }
 
+  // Identifiability: how distinguishable a typing signature is from a population baseline,
+  // attenuated by the Laplace noise that the DP defense adds. 50 = chance, 100 = perfectly identifiable.
+  function identifiability(arr, baseline, b) {
+    if (arr.length < 2) return 50;
+    const med = median(arr);
+    const std = stddev(arr);
+    const signal = Math.abs(med - baseline) + std * 0.6; // contribution from rhythm distinctiveness
+    if (!isFinite(b) || b <= 0) {
+      return 50 + 50 * (signal / (signal + 25)); // clean ceiling shaped by sample size implicitly
+    }
+    // Laplace std is sqrt(2)*b; averaging over n samples shrinks median noise by ~1/sqrt(n).
+    const noiseStd = (Math.SQRT2 * b) / Math.max(1, Math.sqrt(arr.length));
+    return 50 + 50 * (signal / (signal + noiseStd));
+  }
+
+  function noisyScoreLabel(score) {
+    if (score >= 78) return 'Attacker still recovers the signature';
+    if (score >= 62) return 'Some leakage remains';
+    if (score >= 54) return 'Mostly noise — attacker degraded';
+    return 'Indistinguishable from chance';
+  }
+
+  function noisyScoreColor(score) {
+    if (score >= 78) return 'var(--prism-pink)';
+    if (score >= 62) return 'var(--prism-purple)';
+    if (score >= 54) return 'var(--prism-blue)';
+    return '#6dffb0';
+  }
+
+  function updateDp() {
+    if (!hasDp) return;
+    const eps = epsFromSlider();
+    const isOff = !isFinite(eps);
+    const bDwell = isOff ? 0 : DWELL_RANGE / eps;
+    const bFlight = isOff ? 0 : FLIGHT_RANGE / eps;
+
+    dpEpsValueEl.textContent = isOff ? 'ε = ∞ (no defense)' : `ε = ${eps}`;
+    if (dpEpsInline) dpEpsInline.textContent = isOff ? '∞' : String(eps);
+    dpScaleEl.textContent = isOff
+      ? 'Laplace scale: 0 ms (no noise added)'
+      : `Laplace scale: dwell b ≈ ${bDwell.toFixed(0)} ms · flight b ≈ ${bFlight.toFixed(0)} ms`;
+
+    const noisyDwells = noisify(dwells, bDwell);
+    const noisyFlights = noisify(flights, bFlight);
+
+    // Match y-axis ceilings between clean and noisy charts so the visual comparison is fair.
+    const dCeiling = Math.max(80, Math.max(...dwells, 0) * 1.1, Math.max(...noisyDwells, 0) * 1.1);
+    const fCeiling = Math.max(80, Math.max(...flights, 0) * 1.1, Math.max(...noisyFlights, 0) * 1.1);
+
+    drawBars(dpDwellCanvas, noisyDwells, 'rgba(255, 165, 0, 0.78)', 'Type to see DP-noised dwell', { ceiling: dCeiling });
+    drawBars(dpFlightCanvas, noisyFlights, 'rgba(255, 165, 0, 0.78)', 'Type to see DP-noised flight', { ceiling: fCeiling });
+
+    const cleanScore = Math.round(identifiability(dwells, 100, 0) * 0.5 + identifiability(flights, 150, 0) * 0.5);
+    const noisyScore = Math.round(identifiability(dwells, 100, bDwell) * 0.5 + identifiability(flights, 150, bFlight) * 0.5);
+
+    if (dwells.length < 6) {
+      dpCleanScoreEl.textContent = '—';
+      dpNoisyScoreEl.textContent = '—';
+      dpNoisySubEl.textContent = 'Type at least six keys to compare';
+      dpCleanScoreEl.style.color = 'var(--muted)';
+      dpNoisyScoreEl.style.color = 'var(--muted)';
+      return;
+    }
+
+    dpCleanScoreEl.textContent = cleanScore + '%';
+    dpCleanScoreEl.style.color = 'var(--prism-pink)';
+    dpNoisyScoreEl.textContent = noisyScore + '%';
+    dpNoisyScoreEl.style.color = noisyScoreColor(noisyScore);
+    dpNoisySubEl.textContent = isOff ? 'No defense applied' : noisyScoreLabel(noisyScore);
+  }
+
+  function update() {
+    updateClean();
+    updateDp();
+  }
+
   function reset() {
     pressed.clear();
     lastUp = null;
@@ -156,10 +267,15 @@
   });
 
   if (resetBtn) resetBtn.addEventListener('click', reset);
+  if (hasDp) dpEpsInput.addEventListener('input', updateDp);
 
   const setup = () => {
     sizeCanvas(dwellCanvas);
     sizeCanvas(flightCanvas);
+    if (hasDp) {
+      sizeCanvas(dpDwellCanvas);
+      sizeCanvas(dpFlightCanvas);
+    }
     update();
   };
 
