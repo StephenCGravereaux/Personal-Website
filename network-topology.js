@@ -7,7 +7,55 @@
   const fxLayer = svg.querySelector('.net-sim-fx');
   const readoutState = wrap && wrap.querySelector('.net-sim-state');
   const readoutDetail = wrap && wrap.querySelector('.net-sim-detail');
+  const postmortem = wrap && wrap.querySelector('.net-sim-postmortem');
+  const postmortemTitle = postmortem && postmortem.querySelector('.net-sim-postmortem-title');
+  const postmortemList = postmortem && postmortem.querySelector('.net-sim-postmortem-list');
   const controls = document.querySelectorAll('[data-net-scenario]');
+
+  const POSTMORTEM = {
+    ingress: {
+      title: 'Why the perimeter held',
+      bullets: [
+        ['Edge ACL', 'denied TCP/445 (SMB) from an untrusted source — internet hosts have no business reaching internal file shares.'],
+        ['Blast radius', 'the packet never crossed into the core, so AD, VMware, and CUCM never saw the probe.'],
+      ],
+    },
+    auth: {
+      title: 'Why the account locked',
+      bullets: [
+        ['Lockout GPO', 'fired after 5 failed NTLM binds — the DC stops accepting attempts on that user.'],
+        ['Containment', 'the endpoint stays online, but cannot keep brute-forcing without administrator review and reset.'],
+      ],
+    },
+    vlan: {
+      title: 'Why the lateral move failed',
+      bullets: [
+        ['Inter-VLAN ACL', 'on the core switch denied VLAN 30 (endpoints) → VLAN 10 (servers).'],
+        ['Segmentation', 'even with a compromised workstation, east-west pivot to AD, VMware, or CUCM is blocked at L3.'],
+      ],
+    },
+  };
+
+  const showPostmortem = (name) => {
+    if (!postmortem || !postmortemTitle || !postmortemList) return;
+    const data = POSTMORTEM[name];
+    if (!data) return;
+    postmortemTitle.textContent = data.title;
+    postmortemList.innerHTML = '';
+    data.bullets.forEach(([lead, body]) => {
+      const li = document.createElement('li');
+      const s = document.createElement('strong');
+      s.textContent = lead + ' — ';
+      li.appendChild(s);
+      li.appendChild(document.createTextNode(body));
+      postmortemList.appendChild(li);
+    });
+    postmortem.hidden = false;
+  };
+
+  const hidePostmortem = () => {
+    if (postmortem) postmortem.hidden = true;
+  };
 
   // ---------- hover tooltips (preserved) ----------
   const showTip = (e, node) => {
@@ -128,6 +176,11 @@
     wrap.dataset.netState = 'idle';
     activeScenario = null;
     document.querySelectorAll('.net-sim-btn').forEach((b) => b.classList.remove('is-active'));
+    hidePostmortem();
+  };
+
+  const resetReadout = () => {
+    setReadout('idle', 'Idle', 'Pick a scenario to walk through how this stack reacts.');
   };
 
   const scenarios = {
@@ -136,18 +189,17 @@
       setReadout('alert', 'Inbound probe detected', 'Untrusted source attempting TCP/445 toward internal share.');
       const p = spawnPacket('M 130 90 L 220 90', { dur: 900, r: 5, cls: 'net-packet-malicious' });
       await p.done;
-      flash('firewall', 'block');
+      flash('firewall', 'block', 4000);
       spawnBadge(280, 40, 'DROP — ACL deny TCP/445', 'block');
       setReadout('blocked', 'Blocked at perimeter', 'Edge ACL denied TCP/445 from untrusted source. Connection never reached the core.');
-      await wait(2400);
-      cleanup();
-      setReadout('idle', 'Idle', 'Pick a scenario to walk through how this stack reacts.');
+      await wait(700);
+      showPostmortem('ingress');
     },
 
     auth: async () => {
       wrap.dataset.netState = 'attack';
       setReadout('alert', 'Workstation hitting AD with bad creds', 'Repeated NTLM bind failures from a single endpoint.');
-      flash('endpoints', 'compromised', 4200);
+      flash('endpoints', 'compromised', 6000);
       const burst = (delay) => queueTimer(() => {
         spawnPacket('M 740 240 L 740 180 L 220 180 L 220 280 L 200 295', {
           dur: 900, r: 4, cls: 'net-packet-malicious',
@@ -155,35 +207,33 @@
       }, delay);
       [0, 220, 440, 660, 880].forEach(burst);
       await wait(1700);
-      flash('ad', 'block', 2400);
+      flash('ad', 'block', 4500);
       spawnBadge(177, 268, 'AUTH FAIL ×5', 'block');
       setReadout('blocked', 'Account locked by GPO', 'Domain controller tripped the lockout threshold; the account is held until reviewed.');
-      await wait(2600);
-      cleanup();
-      setReadout('idle', 'Idle', 'Pick a scenario to walk through how this stack reacts.');
+      await wait(700);
+      showPostmortem('auth');
     },
 
     vlan: async () => {
       wrap.dataset.netState = 'attack';
       setReadout('alert', 'East-west pivot attempt', 'Endpoint VLAN tries to reach a server VLAN it has no business in.');
-      flash('endpoints', 'compromised', 3800);
+      flash('endpoints', 'compromised', 5500);
       const p = spawnPacket('M 740 240 L 740 180 L 480 180', { dur: 1100, r: 5, cls: 'net-packet-malicious' });
       await p.done;
-      flash('switch', 'block');
+      flash('switch', 'block', 4000);
       spawnBadge(500, 40, 'DENY — VLAN 30 → VLAN 10 (ACL)', 'block');
       // bounce-back animation
       spawnPacket('M 480 180 L 740 180 L 740 240', { dur: 900, r: 4, cls: 'net-packet-rejected' });
       setReadout('blocked', 'Inter-VLAN routing denied', 'Core switch ACL stopped the lateral move before it touched the server segment.');
-      await wait(2600);
-      cleanup();
-      setReadout('idle', 'Idle', 'Pick a scenario to walk through how this stack reacts.');
+      await wait(700);
+      showPostmortem('vlan');
     },
   };
 
   const run = (name) => {
     if (name === 'reset') {
       cleanup();
-      setReadout('idle', 'Idle', 'Pick a scenario to walk through how this stack reacts.');
+      resetReadout();
       return;
     }
     const fn = scenarios[name];
@@ -192,7 +242,7 @@
     activeScenario = name;
     const activeBtn = document.querySelector(`.net-sim-btn[data-net-scenario="${name}"]`);
     if (activeBtn) activeBtn.classList.add('is-active');
-    fn().catch(() => cleanup());
+    fn().catch(() => { cleanup(); resetReadout(); });
   };
 
   controls.forEach((btn) => {

@@ -1454,6 +1454,83 @@ html.reduce-motion .net-packets {
 }
 .net-sim-detail { color: var(--foreground); }
 
+.net-sim-postmortem {
+  margin-top: 0.6rem;
+  padding: 0.95rem 1.05rem 1rem;
+  border: 1px solid rgba(0,240,170,0.35);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(0,240,170,0.08), rgba(10,10,10,0.85));
+  display: grid;
+  gap: 0.55rem;
+  animation: net-sim-postmortem-in 260ms ease-out;
+}
+.net-sim-postmortem[hidden] { display: none; }
+.net-sim-postmortem-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.net-sim-postmortem-tag {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  color: #6dffb0;
+  background: rgba(0,240,170,0.10);
+  border: 1px solid rgba(0,240,170,0.4);
+}
+.net-sim-postmortem-title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--foreground);
+}
+.net-sim-postmortem-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.net-sim-postmortem-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.86rem;
+  color: var(--foreground);
+  line-height: 1.45;
+}
+.net-sim-postmortem-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6dffb0;
+  box-shadow: 0 0 6px rgba(0,240,170,0.6);
+}
+.net-sim-postmortem-list li strong {
+  color: #6dffb0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.net-sim-postmortem-hint {
+  margin: 0.2rem 0 0;
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-style: italic;
+}
+@keyframes net-sim-postmortem-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+html.reduce-motion .net-sim-postmortem { animation: none; }
+
 /* ---- Attack packets and badges ---- */
 .net-attack-packet {
   fill: #ff003c;

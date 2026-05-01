@@ -406,3 +406,47 @@ if (deployMap) {
     playSequence();
   }
 }
+
+// "Now" card — relative freshness indicator
+const nowUpdated = document.querySelector('.now-updated');
+if (nowUpdated) {
+  const timeEl = nowUpdated.querySelector('time[datetime]');
+  const datetimeAttr = timeEl && timeEl.getAttribute('datetime');
+  const updated = datetimeAttr ? new Date(datetimeAttr) : null;
+  if (updated && !Number.isNaN(updated.getTime())) {
+    const startOfDay = (d) => {
+      const c = new Date(d);
+      c.setHours(0, 0, 0, 0);
+      return c;
+    };
+    const now = new Date();
+    const days = Math.floor((startOfDay(now) - startOfDay(updated)) / 86400000);
+    const absoluteText = timeEl.textContent.trim();
+
+    let label;
+    if (days <= 0) {
+      label = 'Updated today';
+    } else if (days === 1) {
+      label = 'Updated yesterday';
+    } else if (days < 30) {
+      label = `Updated ${days} days ago`;
+    } else if (days < 120) {
+      const m = now.getMonth();
+      const season =
+        m === 11 || m <= 1 ? 'winter' :
+        m <= 4 ? 'spring' :
+        m <= 7 ? 'summer' :
+        'fall';
+      label = `Updated earlier this ${season}`;
+    } else {
+      label = `Updated ${updated.toLocaleString('en-US', { month: 'long', year: 'numeric' })}`;
+    }
+
+    while (nowUpdated.firstChild) nowUpdated.removeChild(nowUpdated.firstChild);
+    const t = document.createElement('time');
+    t.setAttribute('datetime', datetimeAttr);
+    t.title = absoluteText;
+    t.textContent = label;
+    nowUpdated.appendChild(t);
+  }
+}
