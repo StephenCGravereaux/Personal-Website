@@ -1,0 +1,18 @@
+# macOS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# AI assistants
+.claude/
+.cursor/
+
+# Local env / secrets
+.env
+.env.local
+.env.*.local
+
+# Logs / temp
+*.log
+*~
