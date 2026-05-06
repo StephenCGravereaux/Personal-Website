@@ -1196,20 +1196,79 @@ if (nowUpdated) {
         setStatus('idle', 'offline');
         return;
       }
+      const clearThinking = () => {
+        if (interval) clearInterval(interval);
+        if (thinking && thinking.parentElement) thinking.parentElement.remove();
+      };
       const res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (interval) clearInterval(interval);
-      thinking.parentElement.remove();
+      const ctype = (res.headers.get('Content-Type') || '').toLowerCase();
+
+      // ---- error path (worker returns JSON regardless of stream support) ----
       if (!res.ok) {
+        let detail = 'request failed';
+        try { const err = await res.json(); detail = (err && err.error) || detail; } catch {}
+        clearThinking();
         const node = print('error', '');
-        await typewriter(node, `[${res.status}] ${data && data.error ? data.error : 'request failed'}`);
+        await typewriter(node, `[${res.status}] ${detail}`);
         setStatus('error', 'error');
         return;
       }
+
+      // ---- streaming path (text/event-stream from Workers AI) ----
+      if (ctype.includes('text/event-stream') && res.body && res.body.getReader) {
+        clearThinking();
+        const node = print('output', '');
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = '';
+        let firstTokenSeen = false;
+        let total = '';
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          let idx;
+          while ((idx = buf.indexOf('\n\n')) !== -1) {
+            const evt = buf.slice(0, idx);
+            buf = buf.slice(idx + 2);
+            for (const line of evt.split('\n')) {
+              if (!line.startsWith('data:')) continue;
+              const payload = line.slice(5).trim();
+              if (!payload || payload === '[DONE]') continue;
+              try {
+                const obj = JSON.parse(payload);
+                const delta = (obj && (obj.response || obj.delta || obj.text)) || '';
+                if (delta) {
+                  if (!firstTokenSeen) {
+                    setStatus('thinking', 'streaming…');
+                    firstTokenSeen = true;
+                  }
+                  node.textContent += delta;
+                  total += delta;
+                  scroll.scrollTop = scroll.scrollHeight;
+                }
+              } catch {}
+            }
+          }
+        }
+        if (!total.trim()) {
+          node.textContent = '';
+          const errNode = print('error', '');
+          await typewriter(errNode, 'empty response from model');
+          setStatus('error', 'error');
+          return;
+        }
+        setStatus('ready', 'ready');
+        return;
+      }
+
+      // ---- fallback: legacy JSON response (works during the worker re-paste window) ----
+      const data = await res.json().catch(() => ({}));
+      clearThinking();
       const answer = (data && data.answer) ? String(data.answer).trim() : '';
       if (!answer) {
         const node = print('error', '');

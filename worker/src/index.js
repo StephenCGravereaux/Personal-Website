@@ -104,19 +104,25 @@ export default {
     }
 
     try {
-      const result = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+      // Stream tokens back as Server-Sent Events. Workers AI emits
+      // `data: {"response": "..."}` chunks plus a terminal `data: [DONE]`.
+      const stream = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user',   content: question },
         ],
-        max_tokens: 512,
+        max_tokens: 320,
         temperature: 0.4,
+        stream: true,
       });
-      const answer = String(result && result.response || '').trim();
-      if (!answer) {
-        return json({ error: 'model returned an empty response' }, { status: 502 }, origin);
-      }
-      return json({ answer }, {}, origin);
+      return new Response(stream, {
+        headers: {
+          ...corsHeaders(origin),
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'X-Content-Type-Options': 'nosniff',
+        },
+      });
     } catch (e) {
       const msg = (e && e.message) ? String(e.message) : String(e);
       return json({ error: 'inference failed', detail: msg.slice(0, 200) }, { status: 502 }, origin);
