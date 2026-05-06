@@ -1030,3 +1030,265 @@ if (nowUpdated) {
     }
   });
 })();
+
+// ---- Terminal-style chatbot in the bottom-right ----
+(() => {
+  if (window.__termBotMounted) return;
+  window.__termBotMounted = true;
+
+  // Cloudflare Worker that proxies to Workers AI (Llama 3.1 8B Instruct).
+  // Source in /worker; redeploy via the Cloudflare dashboard or `wrangler deploy`.
+  const WORKER_URL = 'https://websitehelper.exceptedtie.workers.dev';
+
+  const launcher = document.createElement('button');
+  launcher.type = 'button';
+  launcher.className = 'termbot-launcher';
+  launcher.setAttribute('aria-label', 'Open terminal chat');
+  launcher.innerHTML = '<span class="termbot-launcher-icon" aria-hidden="true">$_</span><span class="termbot-launcher-pulse" aria-hidden="true"></span>';
+  document.body.appendChild(launcher);
+
+  const panel = document.createElement('section');
+  panel.className = 'termbot-panel';
+  panel.setAttribute('aria-label', 'Terminal chat');
+  panel.hidden = true;
+  panel.innerHTML = `
+    <header class="termbot-head">
+      <span class="termbot-dots" aria-hidden="true">
+        <span class="termbot-dot termbot-dot-r"></span>
+        <span class="termbot-dot termbot-dot-y"></span>
+        <span class="termbot-dot termbot-dot-g"></span>
+      </span>
+      <span class="termbot-title">stephen@portfolio: ~/ask</span>
+      <span class="termbot-conn" data-termbot-conn="ready" title="Status"><span class="termbot-conn-dot"></span><span class="termbot-conn-text">ready</span></span>
+      <button type="button" class="termbot-close" aria-label="Close terminal">×</button>
+    </header>
+    <ol class="termbot-scroll" data-termbot-scroll role="log" aria-live="polite"></ol>
+    <form class="termbot-form" autocomplete="off">
+      <span class="termbot-prompt" aria-hidden="true">$</span>
+      <input class="termbot-input" type="text" name="q" placeholder="ask anything about stephen…" aria-label="Ask a question" autocomplete="off" spellcheck="false" maxlength="500"/>
+      <span class="termbot-caret" aria-hidden="true"></span>
+    </form>
+  `;
+  document.body.appendChild(panel);
+
+  const scroll = panel.querySelector('[data-termbot-scroll]');
+  const input  = panel.querySelector('.termbot-input');
+  const form   = panel.querySelector('.termbot-form');
+  const close  = panel.querySelector('.termbot-close');
+  const conn   = panel.querySelector('[data-termbot-conn]');
+  const connText = conn.querySelector('.termbot-conn-text');
+
+  const reduceMotion = document.documentElement.classList.contains('reduce-motion')
+    || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  const setStatus = (kind, text) => {
+    conn.dataset.termbotConn = kind;
+    connText.textContent = text;
+  };
+
+  const print = (kind, text) => {
+    const li = document.createElement('li');
+    li.className = `termbot-line termbot-line-${kind}`;
+    if (kind === 'user') {
+      const p = document.createElement('span');
+      p.className = 'termbot-line-prompt';
+      p.textContent = '$ ';
+      li.appendChild(p);
+    } else if (kind === 'system' || kind === 'error') {
+      const p = document.createElement('span');
+      p.className = 'termbot-line-prompt';
+      p.textContent = kind === 'error' ? '!' : '>';
+      li.appendChild(p);
+    }
+    const body = document.createElement('span');
+    body.className = 'termbot-line-text';
+    body.textContent = text;
+    li.appendChild(body);
+    scroll.appendChild(li);
+    scroll.scrollTop = scroll.scrollHeight;
+    return body;
+  };
+
+  // Typewriter render: returns a Promise resolved when done.
+  const typewriter = (textNode, text, speed = 14) => {
+    if (reduceMotion) {
+      textNode.textContent = text;
+      scroll.scrollTop = scroll.scrollHeight;
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      let i = 0;
+      textNode.textContent = '';
+      const tick = () => {
+        if (i >= text.length) { resolve(); return; }
+        // emit a small batch so the typing isn't painfully slow on long answers
+        const batch = Math.max(1, Math.min(4, Math.floor(text.length / 200)));
+        textNode.textContent += text.slice(i, i + batch);
+        i += batch;
+        scroll.scrollTop = scroll.scrollHeight;
+        setTimeout(tick, speed);
+      };
+      tick();
+    });
+  };
+
+  const HELP = [
+    'available commands:',
+    "  help    show this message",
+    "  clear   clear scrollback",
+    "  exit    close terminal",
+    '',
+    'example questions:',
+    "  what is the IEEE big data paper about?",
+    "  what's stephen's marine background?",
+    "  how do I contact him?",
+    "  what are his certifications?",
+  ];
+
+  const greeted = { value: false };
+  const greet = () => {
+    if (greeted.value) return;
+    greeted.value = true;
+    print('system', 'connecting to stephen@portfolio…');
+    print('system', 'connected. ask anything about stephen, his projects, or research.');
+    print('system', "type 'help' for tips · 'clear' to reset · 'exit' to close");
+    print('blank', '');
+  };
+
+  // ---- history ring ----
+  const history = [];
+  let historyIdx = -1;
+  let draft = '';
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp') {
+      if (!history.length) return;
+      e.preventDefault();
+      if (historyIdx === -1) draft = input.value;
+      historyIdx = Math.min(historyIdx + 1, history.length - 1);
+      input.value = history[history.length - 1 - historyIdx];
+      requestAnimationFrame(() => input.setSelectionRange(input.value.length, input.value.length));
+    } else if (e.key === 'ArrowDown') {
+      if (historyIdx === -1) return;
+      e.preventDefault();
+      historyIdx -= 1;
+      input.value = historyIdx === -1 ? draft : history[history.length - 1 - historyIdx];
+      requestAnimationFrame(() => input.setSelectionRange(input.value.length, input.value.length));
+    }
+  });
+
+  // ---- send a question ----
+  const isWorkerConfigured = () => /^https:\/\/[^.]+\.[^.]+\.workers\.dev/i.test(WORKER_URL) && !/YOUR-CF-SUBDOMAIN/.test(WORKER_URL);
+
+  const askWorker = async (question) => {
+    setStatus('thinking', 'thinking…');
+    const thinking = print('status', '…');
+    let dotN = 0;
+    const interval = reduceMotion ? null : setInterval(() => {
+      dotN = (dotN + 1) % 4;
+      thinking.textContent = '.'.repeat(dotN || 1).padEnd(3, ' ');
+    }, 220);
+    try {
+      if (!isWorkerConfigured()) {
+        await new Promise((r) => setTimeout(r, 600));
+        thinking.parentElement.remove();
+        const node = print('output', '');
+        await typewriter(node, "the chatbot's backend isn't deployed yet. once the cloudflare worker is live and its url is wired into the site, real answers will land here. in the meantime: StephenGrav@outlook.com.");
+        setStatus('idle', 'offline');
+        return;
+      }
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (interval) clearInterval(interval);
+      thinking.parentElement.remove();
+      if (!res.ok) {
+        const node = print('error', '');
+        await typewriter(node, `[${res.status}] ${data && data.error ? data.error : 'request failed'}`);
+        setStatus('error', 'error');
+        return;
+      }
+      const answer = (data && data.answer) ? String(data.answer).trim() : '';
+      if (!answer) {
+        const node = print('error', '');
+        await typewriter(node, 'empty response from model');
+        setStatus('error', 'error');
+        return;
+      }
+      const node = print('output', '');
+      await typewriter(node, answer);
+      setStatus('ready', 'ready');
+    } catch (e) {
+      if (interval) clearInterval(interval);
+      if (thinking.parentElement) thinking.parentElement.remove();
+      const node = print('error', '');
+      await typewriter(node, `network error · ${e && e.message ? e.message : 'unknown'}`);
+      setStatus('error', 'error');
+    }
+  };
+
+  const handleCommand = async (raw) => {
+    const cmd = raw.trim();
+    if (!cmd) return;
+    history.push(cmd);
+    historyIdx = -1;
+    draft = '';
+    print('user', cmd);
+    if (cmd === 'help' || cmd === '/help' || cmd === '?') {
+      HELP.forEach((line) => print('system', line));
+      print('blank', '');
+      return;
+    }
+    if (cmd === 'clear' || cmd === '/clear') {
+      scroll.innerHTML = '';
+      greeted.value = false;
+      greet();
+      return;
+    }
+    if (cmd === 'exit' || cmd === '/exit' || cmd === 'quit' || cmd === ':q') {
+      closePanel();
+      return;
+    }
+    await askWorker(cmd);
+    print('blank', '');
+  };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = input.value;
+    input.value = '';
+    handleCommand(v);
+  });
+
+  // ---- panel open/close ----
+  const openPanel = () => {
+    if (!panel.hidden) return;
+    panel.hidden = false;
+    document.body.classList.add('termbot-open');
+    launcher.setAttribute('aria-expanded', 'true');
+    greet();
+    setTimeout(() => input.focus(), 60);
+  };
+  const closePanel = () => {
+    if (panel.hidden) return;
+    panel.hidden = true;
+    document.body.classList.remove('termbot-open');
+    launcher.setAttribute('aria-expanded', 'false');
+    launcher.focus();
+  };
+
+  launcher.addEventListener('click', () => {
+    if (panel.hidden) openPanel(); else closePanel();
+  });
+  close.addEventListener('click', closePanel);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) {
+      // Don't fight the command palette which has its own Esc handler running first
+      if (document.body.classList.contains('vsc-palette-open')) return;
+      closePanel();
+    }
+  });
+})();
