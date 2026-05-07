@@ -216,10 +216,10 @@ p {
 
 .top-nav ul {
   margin: 0;
-  padding: 0;
+  padding: 0 0.25rem 0 0;
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  gap: 1.15rem;
   flex-wrap: wrap;
 }
 
@@ -268,6 +268,7 @@ p {
   padding: clamp(1.75rem, 4vw, 3rem);
   position: relative;
   z-index: 1;
+  min-width: 0;
 }
 
 .eyebrow {
@@ -2726,8 +2727,8 @@ html.reduce-motion .eyebrow-caret { animation: none; opacity: 0.7; }
 
 /* ---------- Cert / tech-stack marquee ---------- */
 .tech-marquee {
-  width: min(1200px, calc(100% - 2rem));
-  margin: 0.5rem auto 0;
+  width: 100%;
+  margin: 0.85rem 0 0;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(0,240,255,0.06), rgba(138,43,226,0.06), rgba(255,0,127,0.06));
@@ -2777,9 +2778,44 @@ html.reduce-motion .eyebrow-caret { animation: none; opacity: 0.7; }
 html.reduce-motion .tech-marquee-track { animation: none; }
 @media print { .tech-marquee { display: none !important; } }
 
+/* ---------- Stack live-feed wrapper (ties console to topology) ---------- */
+.stack-feed {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border-strong);
+}
+.stack-feed-head h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--prism-blue);
+  font-weight: 700;
+}
+.stack-feed-head p {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  max-width: 70ch;
+}
+.stack-feed-legend {
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+}
+.stack-feed-legend-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
 /* ---------- Live ops console ---------- */
 .ops-console {
-  margin-top: 1.25rem;
+  margin-top: 0;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(10,10,10,0.85));
@@ -2893,16 +2929,49 @@ html.reduce-motion .ops-console-lines li { animation: none; }
 /* ---------- Last-commit ticker ---------- */
 .last-commit {
   margin: 0.85rem 0 0;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.55rem;
+  row-gap: 0.3rem;
   align-items: center;
-  gap: 0.55rem;
+  width: 100%;
+  max-width: 32rem;
+  min-width: 0;
   font-size: 0.82rem;
   color: var(--muted);
   font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
-  padding: 0.35rem 0.7rem;
+  padding: 0.5rem 0.85rem;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 12px;
   background: rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+.last-commit-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--muted-strong);
+  min-width: 0;
+  white-space: nowrap;
+}
+.last-commit-text {
+  grid-column: 1 / -1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  overflow: hidden;
+}
+.last-commit-text > a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
 }
 .last-commit-dot {
   width: 8px;
@@ -2922,22 +2991,17 @@ html.reduce-motion .last-commit-dot { animation: none; }
 .last-commit-sha {
   color: var(--prism-blue);
   font-weight: 600;
+  flex-shrink: 0;
 }
 .last-commit-msg {
   color: var(--foreground);
-  max-width: 38ch;
+  flex: 1 1 0;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.last-commit-time { color: var(--muted); }
-.last-commit a {
-  color: inherit;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-}
+.last-commit-time { color: var(--muted); flex-shrink: 0; }
 .last-commit a:hover .last-commit-msg { color: var(--prism-blue); }
 @media print { .last-commit { display: none !important; } }
 

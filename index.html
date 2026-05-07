@@ -104,6 +104,28 @@
       </ul>
     </nav>
 
+    <div class="tech-marquee" aria-label="Technologies and certifications" role="region">
+      <div class="tech-marquee-track" data-marquee>
+        <span class="tech-marquee-item">USMC Veteran</span>
+        <span class="tech-marquee-item">Security+</span>
+        <span class="tech-marquee-item">Network+</span>
+        <span class="tech-marquee-item">Active Directory</span>
+        <span class="tech-marquee-item">VMware vSphere</span>
+        <span class="tech-marquee-item">Cisco IOS</span>
+        <span class="tech-marquee-item">Cisco CUCM</span>
+        <span class="tech-marquee-item">Linux Server</span>
+        <span class="tech-marquee-item">Windows Server</span>
+        <span class="tech-marquee-item">VoIP / SIP</span>
+        <span class="tech-marquee-item">Python</span>
+        <span class="tech-marquee-item">PyTorch</span>
+        <span class="tech-marquee-item">LoRA Fine-Tuning</span>
+        <span class="tech-marquee-item">Differential Privacy</span>
+        <span class="tech-marquee-item">RAG / Local LLMs</span>
+        <span class="tech-marquee-item">Piper TTS</span>
+        <span class="tech-marquee-item">IEEE Big Data 2025</span>
+      </div>
+    </div>
+
     <div class="hero-layout reveal">
       <div class="hero-copy">
         <p class="eyebrow">
@@ -130,6 +152,7 @@
         <p class="availability-note">Open to Systems Administration and Cybersecurity opportunities.</p>
         <p class="last-commit" data-repo="StephenCGravereaux/Personal-Website" hidden>
           <span class="last-commit-dot" aria-hidden="true"></span>
+          <span class="last-commit-label">Latest commit on this site</span>
           <span class="last-commit-text">Loading latest activity…</span>
         </p>
       </div>
@@ -145,44 +168,7 @@
     </div>
   </header>
 
-  <div class="tech-marquee" aria-label="Technologies and certifications" role="region">
-    <div class="tech-marquee-track" data-marquee>
-      <span class="tech-marquee-item">USMC Veteran</span>
-      <span class="tech-marquee-item">Security+</span>
-      <span class="tech-marquee-item">Network+</span>
-      <span class="tech-marquee-item">Active Directory</span>
-      <span class="tech-marquee-item">VMware vSphere</span>
-      <span class="tech-marquee-item">Cisco IOS</span>
-      <span class="tech-marquee-item">Cisco CUCM</span>
-      <span class="tech-marquee-item">Linux Server</span>
-      <span class="tech-marquee-item">Windows Server</span>
-      <span class="tech-marquee-item">VoIP / SIP</span>
-      <span class="tech-marquee-item">Python</span>
-      <span class="tech-marquee-item">PyTorch</span>
-      <span class="tech-marquee-item">LoRA Fine-Tuning</span>
-      <span class="tech-marquee-item">Differential Privacy</span>
-      <span class="tech-marquee-item">RAG / Local LLMs</span>
-      <span class="tech-marquee-item">Piper TTS</span>
-      <span class="tech-marquee-item">IEEE Big Data 2025</span>
-    </div>
-  </div>
-
   <main id="main-content">
-    <aside class="section ops-console-wrap" aria-label="Live operations console">
-      <div class="ops-console">
-        <div class="ops-console-bar">
-          <span class="ops-console-dot ops-console-dot-r" aria-hidden="true"></span>
-          <span class="ops-console-dot ops-console-dot-y" aria-hidden="true"></span>
-          <span class="ops-console-dot ops-console-dot-g" aria-hidden="true"></span>
-          <span class="ops-console-title">stephen@homelab — demo feed</span>
-          <span class="ops-console-synthetic" title="These log lines are synthetic and generated client-side for demonstration. No real infrastructure is exposed.">SYNTHETIC</span>
-        </div>
-        <div class="ops-console-body">
-          <ol class="ops-console-lines" data-ops-console role="log" aria-live="off"></ol>
-        </div>
-      </div>
-    </aside>
-
     <section class="section reveal" id="now">
       <div class="section-header">
         <span>Snapshot</span>
@@ -196,7 +182,7 @@
         <ul class="now-list">
           <li><span class="now-label">Studying</span><span class="now-value">B.S. Cyber Security at SUNY Albany</span></li>
           <li><span class="now-label">Researching</span><span class="now-value">LoRA vs full fine-tuning for LLM-based malware explanation — IEEE Big Data 2025 (accepted).</span></li>
-          <li><span class="now-label">Building</span><span class="now-value">Local RAG assistant with Piper TTS for privacy-sensitive document QA (CRYPTO Lab).</span></li>
+          <li><span class="now-label">Building</span><span class="now-value">Twitch chatbot tooling, this site, and a few 3D modeling side projects.</span></li>
           <li><span class="now-label">Writing</span><span class="now-value">Smartwatch behavioral-biometrics side-channel paper with a differential-privacy defense.</span></li>
         </ul>
         <p class="now-updated">Last updated <time datetime="2026-04-22">April 22, 2026</time></p>
@@ -488,6 +474,34 @@
         </div>
       </div>
       <p class="net-hint">Solid lines are physical uplinks · dashed lines are tunneled / inter-VLAN traffic</p>
+
+      <div class="stack-feed">
+        <div class="stack-feed-head">
+          <h3>Live signal from these nodes</h3>
+          <p>
+            Mock log lines from the kinds of hosts in the diagram above — domain controllers, ESXi, CUCM, edge firewall, the
+            core switch. They're generated in your browser every couple of seconds so the page feels lived-in. Nothing here
+            touches a real network.
+          </p>
+        </div>
+        <div class="ops-console" aria-label="Synthetic operations log">
+          <div class="ops-console-bar">
+            <span class="ops-console-dot ops-console-dot-r" aria-hidden="true"></span>
+            <span class="ops-console-dot ops-console-dot-y" aria-hidden="true"></span>
+            <span class="ops-console-dot ops-console-dot-g" aria-hidden="true"></span>
+            <span class="ops-console-title">stephen@homelab — demo feed</span>
+            <span class="ops-console-synthetic" title="These log lines are synthetic and generated client-side for demonstration. No real infrastructure is exposed.">SYNTHETIC</span>
+          </div>
+          <div class="ops-console-body">
+            <ol class="ops-console-lines" data-ops-console role="log" aria-live="off"></ol>
+          </div>
+        </div>
+        <p class="stack-feed-legend">
+          <span class="stack-feed-legend-item"><span class="ops-line-tag ok">[OK]</span> healthy</span>
+          <span class="stack-feed-legend-item"><span class="ops-line-tag warn">[WARN]</span> needs attention</span>
+          <span class="stack-feed-legend-item"><span class="ops-line-tag err">[ERR]</span> broken</span>
+        </p>
+      </div>
     </section>
 
     <section class="section reveal" id="explore">
