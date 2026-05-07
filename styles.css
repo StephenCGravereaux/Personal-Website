@@ -78,6 +78,44 @@ html[data-theme="light"] .ops-console-title,
 html[data-theme="light"] .ops-line-time { color: #a0a0a0; }
 html[data-theme="light"] .ops-line-msg { color: #ededed; }
 
+/* Deployment map: invert land/graticule strokes so countries show on light bg */
+html[data-theme="light"] .dm-land {
+  fill: rgba(60, 80, 110, 0.06);
+  stroke: rgba(40, 60, 95, 0.55);
+}
+html[data-theme="light"] .dm-graticule {
+  stroke: rgba(40, 60, 95, 0.18);
+}
+html[data-theme="light"] .dm-label,
+html[data-theme="light"] .dm-readout,
+html[data-theme="light"] .dm-tooltip,
+html[data-theme="light"] .dm-replay {
+  color: var(--foreground);
+}
+
+/* Network topology: pump up zone fills and label legibility on light bg */
+html[data-theme="light"] .net-zone { fill-opacity: 0.10; }
+html[data-theme="light"] .net-node text { fill: var(--foreground); }
+html[data-theme="light"] .net-link-label { fill: var(--muted); }
+html[data-theme="light"] .net-link {
+  stroke: rgba(40, 60, 95, 0.45);
+}
+html[data-theme="light"] .net-link-label-vlan { fill: rgba(40, 80, 160, 0.85); }
+html[data-theme="light"] .net-tooltip {
+  background: #ffffff;
+  color: var(--foreground);
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 24px rgba(20, 20, 40, 0.12);
+}
+
+/* Section card edge needs a bit more contrast on light bg */
+html[data-theme="light"] .section,
+html[data-theme="light"] .page-hero,
+html[data-theme="light"] .hero-layout {
+  border-color: var(--border-strong);
+  box-shadow: 0 1px 0 rgba(20, 20, 40, 0.04), 0 18px 40px rgba(20, 20, 40, 0.06);
+}
+
 * {
   box-sizing: border-box;
 }
