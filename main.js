@@ -35,6 +35,28 @@ const prefersReducedMotion = motionPreference === 'off';
 root.classList.toggle('reduce-motion', prefersReducedMotion);
 const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 
+// Theme toggle (light/dark) — sync the aria-pressed state on load and on click.
+(() => {
+  const applyAria = () => {
+    const isLight = root.getAttribute('data-theme') === 'light';
+    document.querySelectorAll('[data-theme-toggle]').forEach((b) => {
+      b.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+      b.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+    });
+  };
+  applyAria();
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-theme-toggle]');
+    if (!t) return;
+    e.preventDefault();
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if (next === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    setStoredValue('theme', next);
+    applyAria();
+  });
+})();
+
 const progressElement = document.querySelector('.scroll-progress span');
 const updateScrollProgress = () => {
   if (!progressElement) return;
@@ -1029,6 +1051,16 @@ if (nowUpdated) {
       closePalette();
     }
   });
+
+  // Allow any element marked data-vsc-action="palette" anywhere on the page
+  // (e.g. the nav search button) to open the same palette.
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-vsc-action="palette"]');
+    if (!t) return;
+    if (t.closest('.vsc-statusbar')) return; // status bar handles its own clicks
+    e.preventDefault();
+    openPalette();
+  });
 })();
 
 // ---- Terminal-style chatbot in the bottom-right ----
@@ -1044,7 +1076,17 @@ if (nowUpdated) {
   launcher.type = 'button';
   launcher.className = 'termbot-launcher';
   launcher.setAttribute('aria-label', 'Open terminal chat');
-  launcher.innerHTML = '<span class="termbot-launcher-icon" aria-hidden="true">$_</span><span class="termbot-launcher-pulse" aria-hidden="true"></span>';
+  launcher.innerHTML = `
+    <span class="termbot-launcher-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a8 8 0 0 1-11.6 7.13L4 20.5l1.39-5.34A8 8 0 1 1 21 12Z"/>
+        <circle cx="8.5" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+        <circle cx="15.5" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+      </svg>
+    </span>
+    <span class="termbot-launcher-pulse" aria-hidden="true"></span>
+  `;
   document.body.appendChild(launcher);
 
   const panel = document.createElement('section');
