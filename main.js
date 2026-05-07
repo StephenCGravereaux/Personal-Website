@@ -684,6 +684,100 @@ if (nowUpdated) {
 })();
 
 // =====================================================================
+// Heading anchor links — hover-revealed # next to h2/h3 in <main>.
+// Click copies the deep link to the clipboard.
+// =====================================================================
+(() => {
+  const main = document.getElementById('main-content') || document.querySelector('main');
+  if (!main) return;
+  const slug = (s) => s.toLowerCase().trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+  const headings = main.querySelectorAll('h2, h3');
+  headings.forEach((h) => {
+    if (h.querySelector('.heading-anchor')) return;
+    // resolve an id: prefer the heading's own, else its nearest [id] ancestor,
+    // else mint one from the heading text.
+    let id = h.id;
+    if (!id) {
+      const owner = h.closest('[id]');
+      if (owner) id = owner.id;
+    }
+    if (!id) {
+      id = slug(h.textContent || '');
+      if (id) h.id = id;
+    }
+    if (!id) return;
+    const link = document.createElement('a');
+    link.className = 'heading-anchor';
+    link.href = '#' + id;
+    link.setAttribute('aria-label', 'Copy link to this section');
+    link.innerHTML = '<span aria-hidden="true">#</span>';
+    link.addEventListener('click', (e) => {
+      const url = new URL(window.location.href);
+      url.hash = '#' + id;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        e.preventDefault();
+        navigator.clipboard.writeText(url.toString()).then(() => {
+          link.classList.add('is-copied');
+          setTimeout(() => link.classList.remove('is-copied'), 1100);
+          history.replaceState(null, '', '#' + id);
+        }).catch(() => { /* fall through to default */ });
+      }
+    });
+    h.appendChild(document.createTextNode(' '));
+    h.appendChild(link);
+  });
+})();
+
+// =====================================================================
+// Same-origin link prefetch — hover/focus a link long enough and we
+// inject <link rel="prefetch"> so the next-page navigation feels instant.
+// =====================================================================
+(() => {
+  if (!('connection' in navigator) ? false : (navigator.connection && navigator.connection.saveData)) return;
+  const seen = new Set([window.location.pathname]);
+  const HOVER_MS = 150;
+  const isPrefetchable = (a) => {
+    if (!a || !a.href) return false;
+    if (a.target && a.target !== '' && a.target !== '_self') return false;
+    if (a.hasAttribute('download')) return false;
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+    let url;
+    try { url = new URL(a.href, window.location.href); } catch (_) { return false; }
+    if (url.origin !== window.location.origin) return false;
+    if (seen.has(url.pathname)) return false;
+    return true;
+  };
+  const prefetch = (url) => {
+    if (seen.has(url.pathname)) return;
+    seen.add(url.pathname);
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url.href;
+    link.as = 'document';
+    document.head.appendChild(link);
+  };
+  let timer = 0;
+  document.addEventListener('pointerover', (e) => {
+    const a = e.target && e.target.closest && e.target.closest('a[href]');
+    if (!a || !isPrefetchable(a)) return;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      try { prefetch(new URL(a.href, window.location.href)); } catch (_) {}
+    }, HOVER_MS);
+  });
+  document.addEventListener('pointerout', () => clearTimeout(timer));
+  document.addEventListener('focusin', (e) => {
+    const a = e.target && e.target.closest && e.target.closest('a[href]');
+    if (!a || !isPrefetchable(a)) return;
+    try { prefetch(new URL(a.href, window.location.href)); } catch (_) {}
+  });
+})();
+
+// =====================================================================
 // Page transitions — fade between internal navigation
 // =====================================================================
 (() => {
@@ -1392,4 +1486,28 @@ if (nowUpdated) {
       closePanel();
     }
   });
+})();
+
+// =====================================================================
+// Local clock for the contact card — auto-updates every minute.
+// =====================================================================
+(() => {
+  const host = document.querySelector('[data-local-clock]');
+  if (!host) return;
+  const target = host.querySelector('[data-local-time]');
+  const tz = host.getAttribute('data-tz') || 'America/New_York';
+  let fmt;
+  try {
+    fmt = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit', timeZone: tz });
+  } catch (_) {
+    fmt = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' });
+  }
+  const tick = () => {
+    const now = new Date();
+    if (target) target.textContent = fmt.format(now);
+  };
+  tick();
+  // align to the next minute, then keep ticking each minute
+  const msToNextMinute = 60_000 - (Date.now() % 60_000);
+  setTimeout(() => { tick(); setInterval(tick, 60_000); }, msToNextMinute);
 })();
