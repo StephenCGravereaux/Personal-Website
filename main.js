@@ -70,30 +70,6 @@ window.addEventListener('scroll', updateScrollProgress, { passive: true });
 window.addEventListener('resize', updateScrollProgress);
 updateScrollProgress();
 
-if (!prefersReducedMotion && isFinePointer) {
-  let rafId = 0;
-  let pointerX = window.innerWidth * 0.5;
-  let pointerY = window.innerHeight * 0.3;
-
-  const applyPointerGlow = () => {
-    root.style.setProperty('--mouse-x', `${pointerX}px`);
-    root.style.setProperty('--mouse-y', `${pointerY}px`);
-    rafId = 0;
-  };
-
-  window.addEventListener(
-    'pointermove',
-    (event) => {
-      pointerX = event.clientX;
-      pointerY = event.clientY;
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(applyPointerGlow);
-      }
-    },
-    { passive: true }
-  );
-}
-
 const revealItems = document.querySelectorAll('.reveal');
 if (!('IntersectionObserver' in window) || prefersReducedMotion) {
   revealItems.forEach((item) => item.classList.add('visible'));

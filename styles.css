@@ -24,8 +24,6 @@
 
   --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
 
-  --mouse-x: 50vw;
-  --mouse-y: 30vh;
   color-scheme: dark;
 }
 
@@ -148,16 +146,6 @@ body {
   overflow-x: hidden;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background:
-    radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(138, 43, 226, 0.10), transparent 60%);
-}
-
 .skip-link {
   position: absolute;
   left: 0.8rem;
@@ -198,7 +186,7 @@ body::before {
   position: fixed;
   z-index: -1;
   border-radius: 999px;
-  filter: blur(120px);
+  filter: blur(80px);
   opacity: 0.22;
   pointer-events: none;
   will-change: transform;
@@ -230,7 +218,7 @@ body::before {
   width: 24rem;
   height: 24rem;
   border-radius: 999px;
-  filter: blur(140px);
+  filter: blur(96px);
   opacity: 0.16;
   background: var(--prism-blue);
   top: 35%;
@@ -240,19 +228,19 @@ body::before {
 }
 
 @keyframes aurora-drift-a {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.22; }
-  50%  { transform: translate3d(-4vw, 5vh, 0) scale(1.08); opacity: 0.28; }
-  100% { transform: translate3d(2vw, -3vh, 0) scale(0.94); opacity: 0.20; }
+  0%   { transform: translate3d(0, 0, 0); opacity: 0.22; }
+  50%  { transform: translate3d(-4vw, 5vh, 0); opacity: 0.28; }
+  100% { transform: translate3d(2vw, -3vh, 0); opacity: 0.20; }
 }
 @keyframes aurora-drift-b {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.20; }
-  50%  { transform: translate3d(6vw, -4vh, 0) scale(1.10); opacity: 0.26; }
-  100% { transform: translate3d(-3vw, 6vh, 0) scale(0.92); opacity: 0.18; }
+  0%   { transform: translate3d(0, 0, 0); opacity: 0.20; }
+  50%  { transform: translate3d(6vw, -4vh, 0); opacity: 0.26; }
+  100% { transform: translate3d(-3vw, 6vh, 0); opacity: 0.18; }
 }
 @keyframes aurora-drift-c {
-  0%   { transform: translate3d(-50%, -50%, 0) scale(1); opacity: 0.14; }
-  50%  { transform: translate3d(-60%, -40%, 0) scale(1.15); opacity: 0.20; }
-  100% { transform: translate3d(-40%, -55%, 0) scale(0.90); opacity: 0.12; }
+  0%   { transform: translate3d(-50%, -50%, 0); opacity: 0.14; }
+  50%  { transform: translate3d(-60%, -40%, 0); opacity: 0.20; }
+  100% { transform: translate3d(-40%, -55%, 0); opacity: 0.12; }
 }
 html.reduce-motion body::before { animation: none; }
 @media print { body::before { display: none !important; } }
@@ -3261,22 +3249,21 @@ html.reduce-motion main .section + .section::before { animation: none; opacity: 
 :root { --scroll-y: 0; }
 .orb-a { animation-name: aurora-drift-a; }
 .orb-b { animation-name: aurora-drift-b; }
-/* Layer parallax onto the existing animations via translate; we apply an
-   extra transform via a wrapping CSS variable rather than overriding the
-   keyframe transform. The aurora keyframes already control transform, so
-   we instead nudge orbs with margin-top — cheap and animation-safe. */
+/* Parallax via the `translate` property — independent of `transform`, so the
+   aurora keyframes (which drive transform) keep working without conflict.
+   Stays on the compositor and avoids re-rasterizing the blurred surface. */
 .bg-orb {
-  margin-top: calc(var(--scroll-y) * 1px * 0.18);
+  translate: 0 calc(var(--scroll-y) * 1px * 0.18);
 }
 body::before {
-  margin-top: calc(var(--scroll-y) * 1px * -0.10);
+  translate: 0 calc(var(--scroll-y) * 1px * -0.10);
 }
 .profile-card {
   transform: translate3d(0, calc(var(--scroll-y) * 1px * -0.04), 0);
 }
 html.reduce-motion .bg-orb,
-html.reduce-motion body::before,
-html.reduce-motion .profile-card { margin-top: 0 !important; transform: none !important; }
+html.reduce-motion body::before { translate: none !important; }
+html.reduce-motion .profile-card { transform: none !important; }
 
 /* ---------- Page transitions (fade between internal links) ---------- */
 @media (prefers-reduced-motion: no-preference) {
