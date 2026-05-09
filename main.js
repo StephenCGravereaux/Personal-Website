@@ -58,17 +58,21 @@ const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 })();
 
 const progressElement = document.querySelector('.scroll-progress span');
-const updateScrollProgress = () => {
+let progressRaf = 0;
+const writeScrollProgress = () => {
+  progressRaf = 0;
   if (!progressElement) return;
   const scrollTop = window.scrollY;
   const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
-  progressElement.style.width = `${Math.min(100, Math.max(0, progress)).toFixed(2)}%`;
+  const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+  progressElement.style.transform = `scaleX(${Math.min(1, Math.max(0, progress)).toFixed(4)})`;
 };
-
-window.addEventListener('scroll', updateScrollProgress, { passive: true });
-window.addEventListener('resize', updateScrollProgress);
-updateScrollProgress();
+const queueScrollProgress = () => {
+  if (!progressRaf) progressRaf = window.requestAnimationFrame(writeScrollProgress);
+};
+window.addEventListener('scroll', queueScrollProgress, { passive: true });
+window.addEventListener('resize', queueScrollProgress);
+writeScrollProgress();
 
 const revealItems = document.querySelectorAll('.reveal');
 if (!('IntersectionObserver' in window) || prefersReducedMotion) {

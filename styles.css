@@ -47,7 +47,7 @@ html[data-theme="light"] body {
   color: var(--foreground);
 }
 html[data-theme="light"] .top-nav {
-  background: rgba(245, 245, 247, 0.85);
+  background: rgba(245, 245, 247, 0.96);
 }
 html[data-theme="light"] .top-nav li a {
   color: #4a4a52;
@@ -176,10 +176,12 @@ body {
 
 .scroll-progress span {
   display: block;
-  width: 0%;
+  width: 100%;
   height: 100%;
   background: var(--prism-gradient);
-  transition: width 110ms linear;
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  will-change: transform;
 }
 
 .bg-orb {
@@ -288,9 +290,8 @@ p {
   position: sticky;
   top: 0;
   z-index: 900;
-  background: rgba(10, 10, 10, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 10, 10, 0.92);
+  isolation: isolate;
 }
 
 .brand {
@@ -1641,7 +1642,8 @@ html.reduce-motion *::after {
   to { stroke-dashoffset: -18; }
 }
 
-html.reduce-motion .net-link.is-secure {
+html.reduce-motion .net-link.is-secure,
+.net-topology-wrap.is-offscreen .net-link.is-secure {
   animation: none;
 }
 
@@ -3233,16 +3235,10 @@ main .section + .section::before {
   right: 12%;
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.35) 25%, rgba(138,43,226,0.45) 50%, rgba(255,0,127,0.35) 75%, transparent 100%);
-  background-size: 200% 100%;
-  animation: section-divider-sweep 7s linear infinite;
   opacity: 0.55;
   pointer-events: none;
 }
-@keyframes section-divider-sweep {
-  from { background-position:  100% 0; }
-  to   { background-position: -100% 0; }
-}
-html.reduce-motion main .section + .section::before { animation: none; opacity: 0.3; }
+html.reduce-motion main .section + .section::before { opacity: 0.3; }
 @media print { main .section + .section::before { display: none !important; } }
 
 /* ---------- Scroll-tied parallax (reads --scroll-y from JS) ---------- */

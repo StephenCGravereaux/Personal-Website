@@ -248,4 +248,29 @@
   controls.forEach((btn) => {
     btn.addEventListener('click', () => run(btn.getAttribute('data-net-scenario')));
   });
+
+  // Pause the SMIL packet animations + dashed-link flow when the topology
+  // isn't on screen — keeps Chrome's compositor idle while the user is
+  // reading other parts of the page.
+  if (wrap && 'IntersectionObserver' in window) {
+    const setOffscreen = (off) => {
+      wrap.classList.toggle('is-offscreen', off);
+      try {
+        if (off) svg.pauseAnimations();
+        else svg.unpauseAnimations();
+      } catch (_) { /* SMIL unsupported */ }
+    };
+    setOffscreen(true);
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => setOffscreen(!e.isIntersecting));
+    }, { rootMargin: '120px 0px' });
+    io.observe(wrap);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        try { svg.pauseAnimations(); } catch (_) {}
+      } else if (!wrap.classList.contains('is-offscreen')) {
+        try { svg.unpauseAnimations(); } catch (_) {}
+      }
+    });
+  }
 })();
