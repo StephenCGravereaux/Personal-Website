@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Undergraduate research comparing LoRA and full fine-tuning for LLM-based malware detection explanation workflows (EMBER + LightGBM + SHAP)." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | CAFE LAB Project</title>
-  <link rel="stylesheet" href="styles.css?v=20260508c" />
+  <link rel="stylesheet" href="styles.css?v=20260514a" />
   <script>
   (function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
   </script>
@@ -63,9 +63,10 @@
       <h1>Cognitive Security Accountability, Fairness and Explainability (CAFE LAB)</h1>
       <p class="project-period">2025-2026</p>
       <p class="intro">
-        Comparative malware explanation research focused on balancing explanation quality
-        and compute efficiency for practical deployment.
+        LoRA fine-tuning is far cheaper than full fine-tuning. This project measures whether the malware
+        explanations it produces are still good enough to use.
       </p>
+      <p class="project-outcome"><strong>Outcome</strong> LoRA matched most of full fine-tuning's explanation quality while training faster and producing a much smaller model. The paper was accepted to IEEE Big Data 2025.</p>
     </div>
   </header>
 
@@ -79,9 +80,9 @@
       <article class="project-card">
         <p class="project-meta">Role: Undergraduate Researcher</p>
         <p>
-          I designed and validated a malware explanation pipeline that compares parameter-efficient tuning (LoRA)
-          against full fine-tuning for LLM-based analysis. The work covers data preparation, model comparison,
-          explanation generation, and evaluation of performance versus resource cost.
+          I built and validated a malware explanation pipeline that puts parameter-efficient tuning (LoRA) head
+          to head with full fine-tuning. It runs from data prep through generating the explanations, then scores
+          each approach on quality against what it cost to train.
         </p>
 
         <div class="project-links">
@@ -151,9 +152,14 @@
     <p>Ballston Lake, New York</p>
     <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
     <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <div class="signature-block reveal" aria-hidden="true">
+      <svg class="signature" viewBox="0 0 500 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path pathLength="1" d="M72 46C60 34 40 40 44 56C48 70 70 64 66 80C62 96 40 96 46 82C56 84 70 80 90 60C94 44 98 70 100 88C102 96 112 92 118 84C124 78 134 70 138 76C142 82 130 88 126 82C130 92 145 92 154 84C158 80 162 76 164 84C166 100 167 115 168 130C170 110 172 92 176 80C184 72 196 76 196 86C196 96 184 98 180 90C182 89 184 88 186 88C192 84 200 80 204 60C205 55 206 50 208 46C208 70 210 86 212 92C216 84 224 78 232 82C238 86 236 92 240 88C246 82 256 74 260 80C264 86 252 92 248 86C252 94 268 94 276 86C280 82 284 78 286 88C287 80 292 74 300 78C304 80 304 88 306 92C308 84 314 76 322 80C327 83 327 90 330 92C360 100 420 96 470 78C430 86 380 110 360 122C340 132 60 132 40 120C30 114 34 110 50 112M84 56L110 52" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260508c"></script>
+  <script src="main.js?v=20260514a"></script>
 </body>
 </html>

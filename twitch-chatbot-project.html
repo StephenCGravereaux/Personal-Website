@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Multi-model streaming assistant automating Twitch chat with custom voice output, local and hosted model orchestration, and a feature-rich GUI." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Twitch Chatbot Project</title>
-  <link rel="stylesheet" href="styles.css?v=20260508c" />
+  <link rel="stylesheet" href="styles.css?v=20260514a" />
   <script>
   (function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
   </script>
@@ -63,9 +63,10 @@
       <h1>Automated AI Twitch Chatbot</h1>
       <p class="project-period">2023-Current</p>
       <p class="intro">
-        A hobby project built to test whether a full end-to-end AI streaming assistant could be made practical,
-        controllable, and voice-driven.
+        A hobby project. I wanted to find out if I could build a full AI streaming assistant on my own. It reads
+        Twitch chat, replies in a real voice, and has a GUI to run the whole thing.
       </p>
+      <p class="project-outcome"><strong>Outcome</strong> The full pipeline runs end-to-end on a live stream: chat comes in, an AI reply goes out in a custom voice, all driven from one GUI.</p>
     </div>
   </header>
 
@@ -79,10 +80,43 @@
       <article class="project-card">
         <p class="project-meta">Role: Designer and Builder</p>
         <p>
-          I developed an automated AI chatbot system for Twitch that integrates API-driven chat interaction,
-          custom voice output, and model orchestration across both local and hosted LLMs. The goal was to build
-          a working system from scratch as a hobby challenge and prove that a reliable, feature-rich setup was possible.
+          A Twitch chatbot I built from scratch as a hobby project. It hooks into the Twitch API, generates replies through
+          a mix of local and hosted LLMs, and speaks them out loud using a custom-trained voice. The point was mostly to
+          see if I could get all of it running end-to-end and have it actually hold up on a live stream.
         </p>
+
+        <div class="flowchart" role="img" aria-label="Pipeline: Twitch chat, model router, LLM reply, voice synthesis, live stream audio">
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H9l-4 4z"/></svg></span>
+            <span class="flow-node-title">Twitch Chat</span>
+            <span class="flow-node-sub">Live messages pulled through the Twitch API</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 21 12 12 21 3 12Z"/><path d="M9 12h6"/></svg></span>
+            <span class="flow-node-title">Model Router</span>
+            <span class="flow-node-sub">Decides between local and hosted models</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3"/></svg></span>
+            <span class="flow-node-title">LLM Reply</span>
+            <span class="flow-node-sub">Fine-tuned local Llama or hosted OpenAI</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l3-7 4 14 3-9 2 2h3"/></svg></span>
+            <span class="flow-node-title">Voice Synthesis</span>
+            <span class="flow-node-sub">ElevenLabs API with a custom-trained voice</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.5 5.5a9 9 0 0 0 0 13M18.5 5.5a9 9 0 0 1 0 13"/></svg></span>
+            <span class="flow-node-title">Live Stream</span>
+            <span class="flow-node-sub">Spoken aloud on the broadcast in real time</span>
+          </div>
+        </div>
+        <p class="flow-caption">A custom GUI orchestrates and configures every stage.</p>
 
         <div class="project-links">
           <a class="btn btn-primary" href="projects.html">Back to Projects</a>
@@ -122,9 +156,14 @@
     <p>Ballston Lake, New York</p>
     <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
     <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <div class="signature-block reveal" aria-hidden="true">
+      <svg class="signature" viewBox="0 0 500 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path pathLength="1" d="M72 46C60 34 40 40 44 56C48 70 70 64 66 80C62 96 40 96 46 82C56 84 70 80 90 60C94 44 98 70 100 88C102 96 112 92 118 84C124 78 134 70 138 76C142 82 130 88 126 82C130 92 145 92 154 84C158 80 162 76 164 84C166 100 167 115 168 130C170 110 172 92 176 80C184 72 196 76 196 86C196 96 184 98 180 90C182 89 184 88 186 88C192 84 200 80 204 60C205 55 206 50 208 46C208 70 210 86 212 92C216 84 224 78 232 82C238 86 236 92 240 88C246 82 256 74 260 80C264 86 252 92 248 86C252 94 268 94 276 86C280 82 284 78 286 88C287 80 292 74 300 78C304 80 304 88 306 92C308 84 314 76 322 80C327 83 327 90 330 92C360 100 420 96 470 78C430 86 380 110 360 122C340 132 60 132 40 120C30 114 34 110 50 112M84 56L110 52" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260508c"></script>
+  <script src="main.js?v=20260514a"></script>
 </body>
 </html>

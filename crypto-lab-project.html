@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Lightweight local assistant combining LLM inference, retrieval grounding, and Piper TTS for privacy-sensitive document-grounded question answering." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | CRYPTO LAB Project</title>
-  <link rel="stylesheet" href="styles.css?v=20260508c" />
+  <link rel="stylesheet" href="styles.css?v=20260514a" />
   <script>
   (function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
   </script>
@@ -63,9 +63,10 @@
       <h1>CRYPTO Lab — Local RAG Assistant with Piper TTS</h1>
       <p class="project-period">Late 2025</p>
       <p class="intro">
-        Lightweight local LLM and text-to-speech workflow for privacy-sensitive,
-        document-grounded question answering.
+        A local LLM and text-to-speech workflow for asking questions about sensitive documents
+        without sending anything to the cloud.
       </p>
+      <p class="project-outcome"><strong>Outcome</strong> A working local assistant that answers from approved reference material and reads the answer aloud, fully offline, with no document data leaving the machine.</p>
     </div>
   </header>
 
@@ -79,11 +80,44 @@
       <article class="project-card">
         <p class="project-meta">Role: Undergraduate Researcher</p>
         <p>
-          As an undergraduate researcher, I developed this project to support local police departments with a practical, lightweight interface for
-          asking operational questions over approved internal reference material. The workflow indexes documents through
-          a retrieval-augmented generation (RAG) layer, retrieves the most relevant context, and provides grounded answers
-          through a local LLM. Responses are then delivered in both text and speech using Piper TTS.
+          I built this for local police departments that need a quick way to ask questions against their own
+          approved reference material. It indexes those documents with a retrieval-augmented generation (RAG)
+          layer, finds the relevant passages, and has a local LLM answer from them. Piper TTS reads the answer
+          back out loud.
         </p>
+
+        <div class="flowchart" role="img" aria-label="Pipeline: approved documents, RAG index, retrieval, local LLM, Piper text-to-speech">
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/></svg></span>
+            <span class="flow-node-title">Approved Docs</span>
+            <span class="flow-node-sub">Department-approved reference material</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg></span>
+            <span class="flow-node-title">RAG Index</span>
+            <span class="flow-node-sub">Documents embedded and indexed for search</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg></span>
+            <span class="flow-node-title">Retrieve</span>
+            <span class="flow-node-sub">Pulls the passages relevant to the question</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3"/></svg></span>
+            <span class="flow-node-title">Local LLM</span>
+            <span class="flow-node-sub">Answers grounded in the retrieved context</span>
+          </div>
+          <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+          <div class="flow-node">
+            <span class="flow-node-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg></span>
+            <span class="flow-node-title">Piper TTS</span>
+            <span class="flow-node-sub">Reads the grounded answer back aloud</span>
+          </div>
+        </div>
+        <p class="flow-caption">The whole pipeline runs locally in a Docker container, so no document data leaves the machine.</p>
 
         <div class="project-links">
           <a class="btn btn-primary" href="https://github.com/StephenCGravereaux/Piper-TTS-Linux-Windows" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
@@ -135,9 +169,14 @@
     <p>Ballston Lake, New York</p>
     <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
     <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <div class="signature-block reveal" aria-hidden="true">
+      <svg class="signature" viewBox="0 0 500 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path pathLength="1" d="M72 46C60 34 40 40 44 56C48 70 70 64 66 80C62 96 40 96 46 82C56 84 70 80 90 60C94 44 98 70 100 88C102 96 112 92 118 84C124 78 134 70 138 76C142 82 130 88 126 82C130 92 145 92 154 84C158 80 162 76 164 84C166 100 167 115 168 130C170 110 172 92 176 80C184 72 196 76 196 86C196 96 184 98 180 90C182 89 184 88 186 88C192 84 200 80 204 60C205 55 206 50 208 46C208 70 210 86 212 92C216 84 224 78 232 82C238 86 236 92 240 88C246 82 256 74 260 80C264 86 252 92 248 86C252 94 268 94 276 86C280 82 284 78 286 88C287 80 292 74 300 78C304 80 304 88 306 92C308 84 314 76 322 80C327 83 327 90 330 92C360 100 420 96 470 78C430 86 380 110 360 122C340 132 60 132 40 120C30 114 34 110 50 112M84 56L110 52" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <p class="copyright">© <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260508c"></script>
+  <script src="main.js?v=20260514a"></script>
 </body>
 </html>

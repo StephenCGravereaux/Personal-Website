@@ -19,7 +19,7 @@
   <meta name="twitter:description" content="Empirical study of smartwatch motion-sensor side-channel risk and a differential privacy defense evaluated across multiple privacy budgets." />
   <meta name="twitter:image" content="https://stephencgravereaux.github.io/Personal-Website/assets/og-card.png" />
   <title>Stephen Gravereaux | Smartwatch Behavioral Biometrics</title>
-  <link rel="stylesheet" href="styles.css?v=20260508c" />
+  <link rel="stylesheet" href="styles.css?v=20260514a" />
   <script>
   (function(){try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();
   </script>
@@ -63,9 +63,10 @@
       <h1>Behavioral Biometric Analysis for Task and Keystroke Inference</h1>
       <p class="project-period">2025-2026 | University at Albany | CAFE Lab</p>
       <p class="intro">
-        An empirical study of motion-sensor side-channel attacks on smartwatches and
-        a differential-privacy defense that balances privacy against legitimate sensing utility.
+        Your smartwatch's motion sensors can quietly leak what you're typing. This project shows how that attack
+        works, then tests a differential-privacy defense to see how much of it the noise actually blocks.
       </p>
+      <p class="project-outcome"><strong>Outcome</strong> Showed the motion-sensor typing attack is feasible, then measured how much a differential-privacy defense costs the attacker. The work was featured by CBS6 Albany and UAlbany News.</p>
     </div>
   </header>
 
@@ -194,9 +195,9 @@
           </div>
 
           <p class="keystroke-note">
-            Heuristic only — the real classifier uses 13 latency and pressure features across many keystrokes,
-            not this five-number summary. The point is to show that typing produces measurable, distinctive signals
-            that a motion-sensor side channel can approximate on a smartwatch.
+            This is a heuristic, not the real thing. The actual classifier uses 13 latency and pressure features
+            across many keystrokes, not a five-number summary. The point here is just to show that typing produces
+            measurable, distinctive signals that a motion-sensor side channel can approximate on a smartwatch.
           </p>
 
           <div class="dp-defense">
@@ -205,7 +206,7 @@
               <p>
                 The paper adds calibrated <strong>Laplace noise</strong> per feature, scaled by a privacy budget
                 <em>ε</em>: lower ε means stronger privacy and noisier observations. Drag the slider to see what
-                the attacker actually receives at each budget — and watch their identifiability score collapse
+                the attacker actually receives at each budget, and watch their identifiability score collapse
                 toward chance.
               </p>
             </div>
@@ -265,9 +266,9 @@
             </div>
 
             <p class="keystroke-note">
-              Illustrative — the live demo applies one Laplace draw per displayed sample. The published study
-              evaluates ε ∈ {0.05, 0.1, 0.5, 1.0, 2.0} across all 13 features with subject-disjoint splits and
-              attacker-aware retraining. See the manuscript for the measured privacy-utility frontier.
+              This is illustrative only. The live demo applies one Laplace draw per displayed sample, while the
+              published study evaluates ε ∈ {0.05, 0.1, 0.5, 1.0, 2.0} across all 13 features with subject-disjoint
+              splits and attacker-aware retraining. See the manuscript for the measured privacy-utility frontier.
             </p>
           </div>
         </div>
@@ -300,10 +301,15 @@
     <p>Ballston Lake, New York</p>
     <a href="mailto:StephenGrav@outlook.com">StephenGrav@outlook.com</a>
     <a href="https://www.linkedin.com/in/stephen-gravereaux-30752b35a/" target="_blank" rel="noopener noreferrer">linkedin.com/in/stephen-gravereaux-30752b35a</a>
+    <div class="signature-block reveal" aria-hidden="true">
+      <svg class="signature" viewBox="0 0 500 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path pathLength="1" d="M72 46C60 34 40 40 44 56C48 70 70 64 66 80C62 96 40 96 46 82C56 84 70 80 90 60C94 44 98 70 100 88C102 96 112 92 118 84C124 78 134 70 138 76C142 82 130 88 126 82C130 92 145 92 154 84C158 80 162 76 164 84C166 100 167 115 168 130C170 110 172 92 176 80C184 72 196 76 196 86C196 96 184 98 180 90C182 89 184 88 186 88C192 84 200 80 204 60C205 55 206 50 208 46C208 70 210 86 212 92C216 84 224 78 232 82C238 86 236 92 240 88C246 82 256 74 260 80C264 86 252 92 248 86C252 94 268 94 276 86C280 82 284 78 286 88C287 80 292 74 300 78C304 80 304 88 306 92C308 84 314 76 322 80C327 83 327 90 330 92C360 100 420 96 470 78C430 86 380 110 360 122C340 132 60 132 40 120C30 114 34 110 50 112M84 56L110 52" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
     <p class="copyright">&copy; <span id="year"></span> Stephen Gravereaux</p>
   </footer>
 
-  <script src="main.js?v=20260508c"></script>
+  <script src="main.js?v=20260514a"></script>
   <script src="keystroke-demo.js?v=20260429a"></script>
 </body>
 </html>

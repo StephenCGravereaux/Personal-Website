@@ -1491,3 +1491,76 @@ if (nowUpdated) {
   const msToNextMinute = 60_000 - (Date.now() % 60_000);
   setTimeout(() => { tick(); setInterval(tick, 60_000); }, msToNextMinute);
 })();
+
+// =====================================================================
+// Section rail — scroll-aware dot navigation on long pages.
+// Builds itself only when the page has 3+ top-level sections.
+// =====================================================================
+(() => {
+  const main = document.getElementById('main-content');
+  if (!main) return;
+  const sections = Array.from(main.querySelectorAll(':scope > section'));
+  if (sections.length < 3) return;
+
+  const labelFor = (section, i) => {
+    const eyebrow = section.querySelector('.section-header span');
+    const h2 = section.querySelector('h2');
+    return (eyebrow && eyebrow.textContent.trim()) ||
+      (h2 && h2.textContent.trim()) ||
+      `Section ${i + 1}`;
+  };
+
+  const rail = document.createElement('ul');
+  rail.className = 'section-rail';
+  rail.setAttribute('aria-label', 'Section navigation');
+
+  const buttons = sections.map((section, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    const label = labelFor(section, i);
+    btn.setAttribute('aria-label', label);
+    const tag = document.createElement('span');
+    tag.className = 'rail-label';
+    tag.setAttribute('aria-hidden', 'true');
+    tag.textContent = label;
+    btn.appendChild(tag);
+    btn.addEventListener('click', () => {
+      section.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    });
+    li.appendChild(btn);
+    rail.appendChild(li);
+    return btn;
+  });
+
+  document.body.appendChild(rail);
+
+  const setActive = (idx) => {
+    buttons.forEach((b, i) => b.classList.toggle('is-active', i === idx));
+  };
+
+  if ('IntersectionObserver' in window) {
+    const visible = new Map();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) visible.set(e.target, e.intersectionRatio);
+          else visible.delete(e.target);
+        });
+        let best = null;
+        let bestRatio = 0;
+        visible.forEach((ratio, el) => {
+          if (ratio > bestRatio) { bestRatio = ratio; best = el; }
+        });
+        if (best) setActive(sections.indexOf(best));
+      },
+      { threshold: [0.15, 0.4, 0.7], rootMargin: '-10% 0px -45% 0px' }
+    );
+    sections.forEach((s) => obs.observe(s));
+  } else {
+    setActive(0);
+  }
+})();
