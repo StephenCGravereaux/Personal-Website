@@ -63,8 +63,8 @@
       <h1>Stephen Gravereaux</h1>
       <p class="project-period">Systems Administration · Cybersecurity · Network Operations</p>
       <div class="resume-actions">
-        <a class="btn btn-primary" href="Stephen Gravereaux Resume.pdf" target="_blank" rel="noopener noreferrer">Download PDF</a>
-        <button class="btn btn-secondary" type="button" onclick="window.print()">Print Resume</button>
+        <a class="btn btn-primary" href="Stephen Gravereaux Resume.pdf" target="_blank" rel="noopener noreferrer">View PDF</a>
+        <button class="btn btn-secondary" type="button" id="print-resume-pdf">Print Resume</button>
       </div>
     </div>
   </header>
@@ -243,5 +243,43 @@
   </footer>
 
   <script src="main.js?v=20260514a"></script>
+  <script>
+    // Print the resume PDF itself (not the rendered HTML page) via a hidden iframe.
+    (function () {
+      var btn = document.getElementById('print-resume-pdf');
+      if (!btn) return;
+      var pdfUrl = 'Stephen Gravereaux Resume.pdf';
+      btn.addEventListener('click', function () {
+        var existing = document.getElementById('resume-print-frame');
+        if (existing) existing.remove();
+        var frame = document.createElement('iframe');
+        frame.id = 'resume-print-frame';
+        frame.setAttribute('aria-hidden', 'true');
+        frame.style.position = 'fixed';
+        frame.style.right = '0';
+        frame.style.bottom = '0';
+        frame.style.width = '0';
+        frame.style.height = '0';
+        frame.style.border = '0';
+        frame.src = pdfUrl;
+        var printed = false;
+        frame.addEventListener('load', function () {
+          if (printed) return;
+          printed = true;
+          // Give the PDF viewer a tick to mount before triggering print.
+          setTimeout(function () {
+            try {
+              frame.contentWindow.focus();
+              frame.contentWindow.print();
+            } catch (err) {
+              // Fallback: open the PDF in a new tab so the user can print it.
+              window.open(pdfUrl, '_blank', 'noopener');
+            }
+          }, 250);
+        });
+        document.body.appendChild(frame);
+      });
+    })();
+  </script>
 </body>
 </html>
